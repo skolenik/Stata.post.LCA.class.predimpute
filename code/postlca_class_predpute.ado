@@ -23,6 +23,8 @@ program define postlca_class_predpute, rclass
 	if `seed' != 0 {
 		set seed `seed'
 	}
+	qui svyset
+	local svysettings `r(settings)'
 
 
 	* (iii) # of classes
@@ -37,7 +39,7 @@ program define postlca_class_predpute, rclass
 	* (vi) imputations
 	* (vi.a) cumulative class probabilities
 	tempvar cum_clprob_0
-	gen double `cum_clprob_0' = 0 if !mi(`prefix'`num_classes'post_1)
+	gen double `cum_clprob_0' = 0 if !mi(`cl`num_classes'post_1')
 	forvalues k=1/`num_classes' {
 		local k1 = `k'-1
 		tempvar cum_clprob_`k'
@@ -45,31 +47,33 @@ program define postlca_class_predpute, rclass
 	}
 
 	* (vi.b) imputation parameters
-	gen byte `classvar' = .
-	mi set wide
-	mi register imputed `classvar'
-	mi set M = `addm'
-	qui svyset
-	if "`r(settings)'" != ", clear" {
-		mi svyset `r(settings)'
-	}
+	nobreak {
+		gen byte `classvar' = .
+		mi set wide
+		mi register imputed `classvar'
+		mi set M = `addm'
+		if "`svysettings'" != ", clear" {
+			mi svyset `svysettings'
+		}
 
-	* (vi.c) imputed variables
-	forvalues m=1/`: char _dta[_mi_M]' {
-		tempvar u_`m'
-		gen double `u_`m'' = uniform()
-		quietly {
-			forvalues k=1/`num_classes' {
-				local k1 = `k'-1
-				replace _`m'_l`classvar' = `k' if ///
-					`cum_clprob_`k1'' < `u_`m'' & `u_`m'' <= `cum_clprob_`k'' & e(sample)
+		* (vi.c) imputed variables
+		forvalues m=1/`: char _dta[_mi_M]' {
+			tempvar u_`m'
+			gen double `u_`m'' = uniform()
+			quietly {
+				forvalues k=1/`num_classes' {
+					local k1 = `k'-1
+					replace _`m'_`classvar' = `k' if ///
+						`cum_clprob_`k1'' < `u_`m'' & `u_`m'' <= `cum_clprob_`k'' & e(sample)
+				}
 			}
 		}
-	}
 
-	* (vi.d) verify that the imputations are technically clean
-	mi update	
+		* (vi.d) verify that the imputations are technically clean
+		mi update
+	}	
 
+	* (x) just in case mi update returns anything
 	return add
 
 end // of postlca_class_predpute
