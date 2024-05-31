@@ -1,6 +1,56 @@
 *! v.0.1.0 postlca_class_predpute -- multiple imputation of latent classes after LCA
 *! Stas Kolenikov https://github.com/skolenik/Stata.post.LCA.class.predimpute
 
+/* START HELP FILE
+title[a command to impute latent classes following gsem LCA]
+
+desc[
+ {cmd:postlca_class_predpute} produces multiply imputed latent class indicators.
+]
+opt[lcimpute() specifies the name of the latent class variable to be imputed.]
+opt[addm() specifies the number of imputations to created.]
+opt[seed() random number seed]
+
+example[
+ {webuse gsem_lca1.dta, clear}
+ {gsem (accident play insurance stock <-), logit lclass(C 2)}
+ {estat lcamean}
+ {postlca_class_predpute, lcimpute(lclass) addm(10) seed(12345)}
+ {mi estimate : mean accident, over(lclass)}
+]
+
+example[
+ {webuse nhanes2, clear}
+ {svy: gsem ( heartatk diabetes <-, logit) ( hlthstat <-, ologit) (hdresult <-, regress), lclass(C 2)}
+ {* estat lcamean -- takes forever}
+ {postlca_class_predpute, lcimpute(lclass) addm(10) seed(34567)}
+ {mi estimate : mean bp*, over(lclass)}
+]
+
+author[Stas Kolenikov]
+institute[NORC]
+email[skolenik@gmail.com]
+
+return[]
+
+freetext[The variable whose name is provided in {lcimpute()} option
+will be created but it will be missing for the entire sample.
+Researchers should utilize the machinery of multiple imputation
+for all analyses with the imputed latent classes.]
+
+seealso[
+{help mi_intro} Multiple imputation in Stata
+
+{help sem_estat_lcmean} Class means for variables in the model
+
+]
+
+
+The help file is mostly automated with 
+
+    makehlp, file(postlca_class_predpute) replace
+
+END HELP FILE */
 
 program define postlca_class_predpute, rclass
 
