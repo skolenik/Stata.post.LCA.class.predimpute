@@ -56,8 +56,7 @@ program define postlca_class_predpute, rclass
 
 	version 16
 
-	syntax namelist(max=1 name=classvar id="latent class var"), /// 
-		addm(int) [seed(real 0) ]
+	syntax , lcimpute(name max=1) addm(int) [seed(real 0) ]
 
 	* (i) check command
 	if "`e(cmd)'" != "gsem" | "`e(lclass)'" == "" {
@@ -82,25 +81,25 @@ program define postlca_class_predpute, rclass
 
 	* (iv) predictions	
 	forvalues k=1/`num_classes' {
-		tempvar cl`num_classes'post_`k'
-		predict `cl`num_classes'post_`k'', class(`k') classposterior
+		tempvar post`k'
+		predict `post`k'', class(`k') classposterior
 	}
 
 	* (vi) imputations
 	* (vi.a) cumulative class probabilities
 	tempvar cum_clprob_0
-	gen double `cum_clprob_0' = 0 if !mi(`cl`num_classes'post_1')
+	gen double `cum_clprob_0' = 0 if !mi(`post1')
 	forvalues k=1/`num_classes' {
 		local k1 = `k'-1
 		tempvar cum_clprob_`k'
-		gen double `cum_clprob_`k'' = `cum_clprob_`k1'' + `cl`num_classes'post_`k'' 
+		gen double `cum_clprob_`k'' = `cum_clprob_`k1'' + `post`k'' 
 	}
 
 	* (vi.b) imputation parameters
 	nobreak {
-		gen byte `classvar' = .
+		gen byte `lcimpute' = .
 		mi set wide
-		mi register imputed `classvar'
+		mi register imputed `lcimpute'
 		mi set M = `addm'
 		if "`svysettings'" != ", clear" {
 			mi svyset `svysettings'
@@ -113,7 +112,7 @@ program define postlca_class_predpute, rclass
 			quietly {
 				forvalues k=1/`num_classes' {
 					local k1 = `k'-1
-					replace _`m'_`classvar' = `k' if ///
+					replace _`m'_`lcimpute' = `k' if ///
 						`cum_clprob_`k1'' < `u_`m'' & `u_`m'' <= `cum_clprob_`k'' & e(sample)
 				}
 			}
