@@ -1,6 +1,3 @@
-% readme.tex -- a short example of how each Stata Journal insert should be
-% organized.
-
 \inserttype[st0001]{article}
 \author{Kolenikov}{%
   Stas Kolenikov\\NORC\\Columbia, Missouri, USA\\kolenikov-stas@norc.org
@@ -19,13 +16,112 @@ information.
 
 \section{Latent class analysis}
 
+Latent class analysis 
+
+Running example
+
+\begin{stlog}
+. webuse gsem_lca1
+\smallskip
+. gsem (accident play insurance stock <- ), logit lclass(C 2)
+\end{stlog}
+
 Researchers are often interested in describing the latent classes
 or using these classes in analysis as predictors or as moderators.
+The official \semref{gsem postestimation} commands provide
+limited possibilities, namely reporting of the means
+of the dependent variables by class via \stcmd{estat lcmean}.
+For nearly all meaningful applications of LCA, this is insufficient.
+
+One possible approach is to predict the modal class for each
+observation, and use it in subsequent downstream analyses 
+treating that as fixed:
 
 
-\section{New command}
+
+The program distributed with the current package,
+\stcmd{postlca\_class\_predpute}, provides a pathway for the appropriate
+statistical inference that would account for uncertainty in class prediction.
+This is achieved through the mechanics of multiple imputation
+\citep{vanbuuren:2018:fimd2}. 
+The name is supposed to convey that
+\begin{enumerate}
+  \item it is supposed to be run after LCA as a post-estimation command;
+  \item it predicts / imputes the latent classes.
+\end{enumerate}
+
+\section{The new command}
+
+Imputation of latent classes, a \stcmd{gsem} postestimation command:
+
+\begin{stverbatim}
+\begin{verbatim}
+\begin{stsyntax}
+    postlca\_class\_predpute,
+    lcimpute(\varname)
+    addm(\num)
+    \optional{ seed(\num) }
+\end{stsyntax}
+\end{verbatim}
+\end{stverbatim}
+
+\hangpara{
+  \stcmd{lcimpute(}\varname\stcmd{)} 
+  specifies the name of the latent class variable to be imputed.
+  This option is required.
+}
+
+\hangpara{
+  \stcmd{addm(}\num{)} specifies the number of imputations to be created.
+  This option is required.
+}
+
+\hangpara{
+  \stcmd{seed(}\num\stcmd{)} specifies the random number seed.
+}
 
 \section{Examples}
+
+\subsection{Stata manual data set example}
+
+The LCA capabilities of Stata are exemplified in [SEM] \textbf{Example 50g}:
+
+\begin{stlog}
+\input{example_lca1_edited.log.tex}\nullskip
+\end{stlog}
+
+One of the official post-estimation commands available after
+\stcmd{gsem, lclass()} is the computation of the class-specific means
+of the outcome variables:
+
+\begin{stlog}
+\input{example_lca1_lcamean.log.tex}\nullskip
+\end{stlog}
+
+The mutiple imputation version of this estimation task could
+look as follows:
+
+\begin{stlog}
+\input{example_lca1_predpute.log.tex}\nullskip
+\end{stlog}
+
+The name of the latent class variable (here, \stcmd{lclass})
+and the number of imputations are required. The seed is optional,
+but of course is strongly recommended for reproducibility of the results,
+as the underlying data are randomly simulated.
+The multiple imputation version is notably faster.
+
+\subsection{NHANES complex survey data}
+
+In many important and realistic applications of LCA, including the case
+that necessitated the development of this package, the data come from
+complex survey designs that require setting the data up for the appropriate
+survey-design adjusted analyses. See \svyref{svyset}, \miref{mi svyset},
+and \citet{kolenikov:pitblado:2014}.
+
+As one of many diagnostic outputs of MI, the increase in variances / standard errors
+due to imputations serves as an indication of how much of a problem
+would treating the singly imputed (e.g. modal probability) latent classes would have been
 
 
 
@@ -40,7 +136,14 @@ or using these classes in analysis as predictors or as moderators.
 \bibliography{sj}
 
 \begin{aboutauthors}
-Stas Kolenikova is Principal Statistician at NORC.
+Stas Kolenikov is Principal Statistician at NORC who has been
+using Stata and writing Stata programs for about 25 years.
+He had worked on economic welfare and inequality, spatiotemporal
+environmental statistics, mixture models, missing data,
+multiple imputation, structural equations with latent variables,
+resampling methods, complex sampling designs, survey weights,
+Bayesian mixed models, combining probability and non-probability samples,
+latent class analysis, and likely some other stuff, too.
 \end{aboutauthors}
 
 \endinput
