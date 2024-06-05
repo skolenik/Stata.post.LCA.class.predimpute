@@ -1,0 +1,97 @@
+. frame change default
+{\smallskip}
+. cap frame gsem_lca1: clear
+{\smallskip}
+. cap frame drop gsem_lca1 
+{\smallskip}
+. frame create gsem_lca1
+{\smallskip}
+. frame change gsem_lca1
+{\smallskip}
+. 
+. webuse gsem_lca1.dta, clear
+(Latent class analysis)
+{\smallskip}
+. describe
+{\smallskip}
+Contains data from https://www.stata-press.com/data/r18/gsem_lca1.dta
+ Observations:           216                  Latent class analysis
+    Variables:             4                  17 Jan 2023 12:52
+                                              (_dta has notes)
+\HLI{95}
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+\HLI{95}
+accident        byte    \%9.0g                 Would testify against friend in accident case
+play            byte    \%9.0g                 Would give negative review of friend's play
+insurance       byte    \%9.0g                 Would disclose health concerns to friend's
+                                                insurance company
+stock           byte    \%9.0g                 Would keep company secret from friend
+\HLI{95}
+Sorted by: accident  play  insurance  stock
+{\smallskip}
+. gsem (accident play insurance stock <-), logit lclass(C 2)
+{\oom}
+Generalized structural equation model                      Number of obs = 216
+Log likelihood = -504.46767
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+1.C          {\VBAR}  (base outcome)
+\HLI{13}{\PLUS}\HLI{64}
+2.C          {\VBAR}
+       _cons {\VBAR}  -.9482041   .2886333    -3.29   0.001    -1.513915   -.3824933
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    1        
+{\smallskip}
+Response: accident 
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: play     
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: insurance
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: stock    
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+accident     {\VBAR}
+       _cons {\VBAR}   .9128742   .1974695     4.62   0.000     .5258411    1.299907
+\HLI{13}{\PLUS}\HLI{64}
+play         {\VBAR}
+       _cons {\VBAR}  -.7099072   .2249096    -3.16   0.002    -1.150722   -.2690926
+\HLI{13}{\PLUS}\HLI{64}
+insurance    {\VBAR}
+       _cons {\VBAR}  -.6014307   .2123096    -2.83   0.005     -1.01755   -.1853115
+\HLI{13}{\PLUS}\HLI{64}
+stock        {\VBAR}
+       _cons {\VBAR}  -1.880142   .3337665    -5.63   0.000    -2.534312   -1.225972
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    2        
+{\oom}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+accident     {\VBAR}
+       _cons {\VBAR}   4.983017   3.745987     1.33   0.183    -2.358982    12.32502
+\HLI{13}{\PLUS}\HLI{64}
+play         {\VBAR}
+       _cons {\VBAR}   2.747366   1.165853     2.36   0.018     .4623372    5.032395
+\HLI{13}{\PLUS}\HLI{64}
+insurance    {\VBAR}
+       _cons {\VBAR}   2.534582   .9644841     2.63   0.009     .6442279    4.424936
+\HLI{13}{\PLUS}\HLI{64}
+stock        {\VBAR}
+       _cons {\VBAR}   1.203416   .5361735     2.24   0.025     .1525356    2.254297
+\HLI{13}{\BOTT}\HLI{64}

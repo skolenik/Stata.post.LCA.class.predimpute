@@ -1,0 +1,52 @@
+. set rmsg on
+r; t=0.00 13:42:23
+{\smallskip}
+. postlca_class_predpute, lcimpute(lclass) addm(10) seed(12345)
+(216 missing values generated)
+(10 imputations added; {\sltt{M}} = 10)
+r; t=0.05 13:42:23
+{\smallskip}
+. mi estimate : prop lclass
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =        216
+                                  Average RVI     =     0.4594
+                                  Largest FMI     =     0.3319
+                                  Complete DF     =        215
+DF adjustment:   Small sample     DF:     min     =      55.99
+                                          avg     =      55.99
+Within VCE type:     Analytic             max     =      55.99
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}                                   Normal
+             {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+      lclass {\VBAR}
+          1  {\VBAR}   .7236111   .0367281      .6500355    .7971867
+          2  {\VBAR}   .2763889   .0367281      .2028133    .3499645
+\HLI{13}{\BOTT}\HLI{48}
+r; t=0.65 13:42:23
+{\smallskip}
+. mi estimate : mean accident, over(lclass)
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Mean estimation                   Number of obs   =        216
+                                  Average RVI     =     0.3882
+                                  Largest FMI     =     0.4485
+                                  Complete DF     =        215
+DF adjustment:   Small sample     DF:     min     =      35.59
+                                          avg     =     116.62
+Within VCE type:     Analytic             max     =     197.64
+{\smallskip}
+\HLI{18}{\TOPT}\HLI{48}
+                  {\VBAR}       Mean   Std. err.     [95\% conf. interval]
+\HLI{18}{\PLUS}\HLI{48}
+c.accident@lclass {\VBAR}
+               1  {\VBAR}   .7144964   .0369935      .6415438    .7874491
+               2  {\VBAR}   .9934973   .0135709      .9659633    1.021031
+\HLI{18}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
+r; t=0.72 13:42:24
+{\smallskip}
+. set rmsg off
+{\smallskip}

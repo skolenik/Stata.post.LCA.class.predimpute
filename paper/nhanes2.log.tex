@@ -1,0 +1,122 @@
+. frame change default
+{\smallskip}
+. cap frame nhanes2: clear
+{\smallskip}
+. cap frame drop nhanes2
+{\smallskip}
+. frame create nhanes2
+{\smallskip}
+. frame change nhanes2
+{\smallskip}
+. 
+. webuse nhanes2.dta, clear
+{\smallskip}
+. svyset
+{\smallskip}
+Sampling weights: finalwgt
+             VCE: linearized
+     Single unit: missing
+        Strata 1: strata
+ Sampling unit 1: psu
+           FPC 1: <zero>
+{\smallskip}
+. svy , subpop(if hlthstat<8) : ///
+>         gsem ///
+>                 (heartatk diabetes highbp <-, logit) ///
+>                 (hlthstat <-, ologit) /// 
+>         , lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
+(running {\bftt{gsem}} on estimation sample)
+{\smallskip}
+Survey: Generalized structural equation model
+{\smallskip}
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Subpop. no. obs =      10,335
+                                                 Subpop. size    = 116,997,257
+                                                 Design df       =          31
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR}             Linearized
+             {\VBAR} Coefficient  std. err.      t    P>|t|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+1.C          {\VBAR}  (base outcome)
+\HLI{13}{\PLUS}\HLI{64}
+2.C          {\VBAR}
+       _cons {\VBAR}   1.330043   .1259401    10.56   0.000     1.073186    1.586899
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    1        
+{\smallskip}
+Response: heartatk                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: diabetes                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: highbp                                        Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: hlthstat                                      Number of obs = 10,335
+Family:   Ordinal  
+Link:     Logit    
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR}             Linearized
+             {\VBAR} Coefficient  std. err.      t    P>|t|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+heartatk     {\VBAR}
+       _cons {\VBAR}  -1.874967   .1150791   -16.29   0.000    -2.109672   -1.640261
+\HLI{13}{\PLUS}\HLI{64}
+diabetes     {\VBAR}
+       _cons {\VBAR}  -1.785271   .0805057   -22.18   0.000    -1.949463   -1.621078
+\HLI{13}{\PLUS}\HLI{64}
+highbp       {\VBAR}
+       _cons {\VBAR}   .4244921    .076861     5.52   0.000     .2677332    .5812511
+\HLI{13}{\PLUS}\HLI{64}
+/hlthstat    {\VBAR}
+        cut1 {\VBAR}  -3.659014   .8903346                     -5.474863   -1.843165
+        cut2 {\VBAR}  -2.272516   .4402984                      -3.17051   -1.374521
+        cut3 {\VBAR}  -.2566588   .2032721                      -.671235    .1579173
+        cut4 {\VBAR}   1.229244   .1951641                      .8312038    1.627283
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    2        
+{\smallskip}
+Response: heartatk                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: diabetes                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: highbp                                        Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: hlthstat                                      Number of obs = 10,335
+Family:   Ordinal  
+Link:     Logit    
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR}             Linearized
+             {\VBAR} Coefficient  std. err.      t    P>|t|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+heartatk     {\VBAR}
+       _cons {\VBAR}  -6.081307   .6280801    -9.68   0.000    -7.362285   -4.800329
+\HLI{13}{\PLUS}\HLI{64}
+diabetes     {\VBAR}
+       _cons {\VBAR}  -5.223215   .6044468    -8.64   0.000    -6.455993   -3.990438
+\HLI{13}{\PLUS}\HLI{64}
+highbp       {\VBAR}
+       _cons {\VBAR}  -.8166105   .0750027   -10.89   0.000    -.9695795   -.6636415
+\HLI{13}{\PLUS}\HLI{64}
+/hlthstat    {\VBAR}
+        cut1 {\VBAR}   -.657824   .0483113                     -.7563555   -.5592926
+        cut2 {\VBAR}   .7123144   .0649814                      .5797839    .8448448
+        cut3 {\VBAR}   2.647239   .1192958                      2.403934    2.890544
+        cut4 {\VBAR}   24.64389    14.1421                     -4.199113    53.48689
+\HLI{13}{\BOTT}\HLI{64}

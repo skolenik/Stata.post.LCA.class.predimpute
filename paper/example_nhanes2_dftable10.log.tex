@@ -1,0 +1,57 @@
+. mi estimate : prop hlthstat if hlthstat < 8, over(lclass) 
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =      36.31
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+{\smallskip}
+\HLI{16}{\TOPT}\HLI{48}
+                {\VBAR}                                   Normal
+                {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{16}{\PLUS}\HLI{48}
+hlthstat@lclass {\VBAR}
+   Excellent 1  {\VBAR}   .0196036   .0034636      .0126501    .0265572
+   Excellent 2  {\VBAR}   .3104144   .0055292      .2995676    .3212613
+   Very good 1  {\VBAR}   .0550625   .0061217      .0426506    .0674743
+   Very good 2  {\VBAR}   .3217978   .0056545      .3106989    .3328966
+        Good 1  {\VBAR}   .2971359   .0106787      .2758813    .3183905
+        Good 2  {\VBAR}   .2795891   .0056354      .2685025    .2906756
+        Fair 1  {\VBAR}   .3635286   .0106978      .3423564    .3847008
+        Fair 2  {\VBAR}   .0881987    .003944      .0803607    .0960367
+        Poor 1  {\VBAR}   .2646694   .0089821      .2470257     .282313
+        Poor 2  {\VBAR}          0  (no observations)
+\HLI{16}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
+{\smallskip}
+. mi estimate, dftable
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =      36.31
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+{\smallskip}
+\HLI{16}{\TOPT}\HLI{48}
+                {\VBAR}                                          Normal
+                {\VBAR} Proportion   Std. err.           df   std. err.
+\HLI{16}{\PLUS}\HLI{48}
+hlthstat@lclass {\VBAR}
+   Excellent 1  {\VBAR}   .0196036   .0034636          51.0       31.13
+   Excellent 2  {\VBAR}   .3104144   .0055292        1330.3        4.05
+   Very good 1  {\VBAR}   .0550625   .0061217          36.3       40.88
+   Very good 2  {\VBAR}   .3217978   .0056545         827.8        5.38
+        Good 1  {\VBAR}   .2971359   .0106787          79.2       22.65
+        Good 2  {\VBAR}   .2795891   .0056354         324.7        9.33
+        Fair 1  {\VBAR}   .3635286   .0106978         125.0       16.73
+        Fair 2  {\VBAR}   .0881987    .003944          87.9       21.09
+        Poor 1  {\VBAR}   .2646694   .0089821         548.3        6.85
+        Poor 2  {\VBAR}          0  (no observations)
+\HLI{16}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.

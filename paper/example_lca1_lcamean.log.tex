@@ -1,0 +1,41 @@
+. set rmsg on
+r; t=0.00 13:42:16
+{\smallskip}
+. estat lcprob
+{\smallskip}
+Latent class marginal probabilities                        Number of obs = 216
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}            Delta-method
+             {\VBAR}     Margin   std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+           C {\VBAR}
+          1  {\VBAR}   .7207539   .0580926      .5944743    .8196407
+          2  {\VBAR}   .2792461   .0580926      .1803593    .4055257
+\HLI{13}{\BOTT}\HLI{48}
+r; t=1.21 13:42:17
+{\smallskip}
+. estat lcmean
+{\smallskip}
+Latent class marginal means                                Number of obs = 216
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}            Delta-method
+             {\VBAR}     Margin   std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+1            {\VBAR}
+    accident {\VBAR}   .7135879   .0403588      .6285126    .7858194
+        play {\VBAR}   .3296193   .0496984      .2403573    .4331299
+   insurance {\VBAR}   .3540164   .0485528      .2655049    .4538042
+       stock {\VBAR}   .1323726   .0383331      .0734875    .2268872
+\HLI{13}{\PLUS}\HLI{48}
+2            {\VBAR}
+    accident {\VBAR}   .9931933   .0253243      .0863544    .9999956
+        play {\VBAR}   .9397644   .0659957      .6135685    .9935191
+   insurance {\VBAR}   .9265309   .0656538      .6557086    .9881667
+       stock {\VBAR}    .769132   .0952072      .5380601    .9050206
+\HLI{13}{\BOTT}\HLI{48}
+r; t=5.26 13:42:23
+{\smallskip}
+. set rmsg off
+{\smallskip}

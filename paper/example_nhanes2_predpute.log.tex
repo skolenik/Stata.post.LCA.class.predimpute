@@ -1,0 +1,94 @@
+. set rmsg on
+r; t=0.00 13:53:50
+{\smallskip}
+. postlca_class_predpute, lcimpute(lclass) addm(10) seed(5678)
+(10,351 missing values generated)
+(10 imputations added; {\sltt{M}} = 10)
+{\smallskip}
+Sampling weights: finalwgt
+             VCE: linearized
+     Single unit: missing
+        Strata 1: strata
+ Sampling unit 1: psu
+           FPC 1: <zero>
+r; t=0.20 13:53:50
+{\smallskip}
+. mi estimate : prop lclass
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.5318
+                                  Largest FMI     =     0.3641
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =      73.85
+                                          avg     =      73.85
+Within VCE type:     Analytic             max     =      73.85
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}                                   Normal
+             {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+      lclass {\VBAR}
+          1  {\VBAR}   .2675394   .0053851       .256809    .2782698
+          2  {\VBAR}   .7324606   .0053851      .7217302     .743191
+\HLI{13}{\BOTT}\HLI{48}
+r; t=0.84 13:53:51
+{\smallskip}
+. mi estimate : prop hlthstat if hlthstat < 8, over(lclass)
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =      36.31
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+{\smallskip}
+\HLI{16}{\TOPT}\HLI{48}
+                {\VBAR}                                   Normal
+                {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{16}{\PLUS}\HLI{48}
+hlthstat@lclass {\VBAR}
+   Excellent 1  {\VBAR}   .0196036   .0034636      .0126501    .0265572
+   Excellent 2  {\VBAR}   .3104144   .0055292      .2995676    .3212613
+   Very good 1  {\VBAR}   .0550625   .0061217      .0426506    .0674743
+   Very good 2  {\VBAR}   .3217978   .0056545      .3106989    .3328966
+        Good 1  {\VBAR}   .2971359   .0106787      .2758813    .3183905
+        Good 2  {\VBAR}   .2795891   .0056354      .2685025    .2906756
+        Fair 1  {\VBAR}   .3635286   .0106978      .3423564    .3847008
+        Fair 2  {\VBAR}   .0881987    .003944      .0803607    .0960367
+        Poor 1  {\VBAR}   .2646694   .0089821      .2470257     .282313
+        Poor 2  {\VBAR}          0  (no observations)
+\HLI{16}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
+r; t=1.06 13:53:52
+{\smallskip}
+. mi estimate : prop race, over(lclass)
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.3605
+                                  Largest FMI     =     0.4457
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =      49.67
+                                          avg     =     221.74
+Within VCE type:     Analytic             max     =     369.53
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}                                   Normal
+             {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+ race@lclass {\VBAR}
+    White 1  {\VBAR}   .8386285   .0080726      .8226698    .8545871
+    White 2  {\VBAR}   .8893271   .0039143      .8816299    .8970242
+    Black 1  {\VBAR}   .1449351   .0076096       .129914    .1599563
+    Black 2  {\VBAR}    .090294   .0035891      .0832346    .0973535
+    Other 1  {\VBAR}   .0164364   .0031837      .0100406    .0228322
+    Other 2  {\VBAR}   .0203789   .0017966      .0168411    .0239168
+\HLI{13}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
+r; t=1.00 13:53:53
+{\smallskip}
+. set rmsg off
+{\smallskip}

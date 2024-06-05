@@ -1,0 +1,158 @@
+. frame change default
+{\smallskip}
+. cap frame gsem_lca1: clear
+{\smallskip}
+. cap frame drop gsem_lca1 
+{\smallskip}
+. frame create gsem_lca1
+{\smallskip}
+. frame change gsem_lca1
+{\smallskip}
+. 
+. webuse gsem_lca1.dta, clear
+(Latent class analysis)
+{\smallskip}
+. describe
+{\smallskip}
+Contains data from https://www.stata-press.com/data/r18/gsem_lca1.dta
+ Observations:           216                  Latent class analysis
+    Variables:             4                  17 Jan 2023 12:52
+                                              (_dta has notes)
+\HLI{142}
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+\HLI{142}
+accident        byte    \%9.0g                 Would testify against friend in accident case
+play            byte    \%9.0g                 Would give negative review of friend's play
+insurance       byte    \%9.0g                 Would disclose health concerns to friend's insurance company
+stock           byte    \%9.0g                 Would keep company secret from friend
+\HLI{142}
+Sorted by: accident  play  insurance  stock
+{\smallskip}
+. gsem (accident play insurance stock <-), logit lclass(C 2)
+{\smallskip}
+Fitting class model:
+{\smallskip}
+Iteration 0:  (class) log likelihood = -149.71979  
+Iteration 1:  (class) log likelihood = -149.71979  
+{\smallskip}
+Fitting outcome model:
+{\smallskip}
+Iteration 0:  (outcome) log likelihood = -403.97142  
+Iteration 1:  (outcome) log likelihood = -398.15909  
+Iteration 2:  (outcome) log likelihood = -397.81953  
+Iteration 3:  (outcome) log likelihood =  -397.8164  
+Iteration 4:  (outcome) log likelihood =  -397.8164  
+{\smallskip}
+Refining starting values:
+{\smallskip}
+Iteration 0:  (EM) log likelihood = -570.24204
+Iteration 1:  (EM) log likelihood = -576.20485
+Iteration 2:  (EM) log likelihood = -577.41464
+Iteration 3:  (EM) log likelihood = -576.88554
+Iteration 4:  (EM) log likelihood = -575.59242
+Iteration 5:  (EM) log likelihood = -573.90567
+Iteration 6:  (EM) log likelihood = -571.99868
+Iteration 7:  (EM) log likelihood = -569.97482
+Iteration 8:  (EM) log likelihood = -567.90955
+Iteration 9:  (EM) log likelihood = -565.86392
+Iteration 10: (EM) log likelihood = -563.88815
+Iteration 11: (EM) log likelihood = -562.02165
+Iteration 12: (EM) log likelihood = -560.29231
+Iteration 13: (EM) log likelihood = -558.71641
+Iteration 14: (EM) log likelihood = -557.29974
+Iteration 15: (EM) log likelihood = -556.03949
+Iteration 16: (EM) log likelihood = -554.92679
+Iteration 17: (EM) log likelihood = -553.94914
+Iteration 18: (EM) log likelihood = -553.09241
+Iteration 19: (EM) log likelihood = -552.34233
+Iteration 20: (EM) log likelihood = -551.68539
+note: EM algorithm reached maximum iterations.
+{\smallskip}
+Fitting full model:
+{\smallskip}
+Iteration 0:  Log likelihood = -504.62913  
+Iteration 1:  Log likelihood = -504.47255  
+Iteration 2:  Log likelihood = -504.46773  
+Iteration 3:  Log likelihood = -504.46767  
+Iteration 4:  Log likelihood = -504.46767  
+{\smallskip}
+Generalized structural equation model                      Number of obs = 216
+Log likelihood = -504.46767
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+1.C          {\VBAR}  (base outcome)
+\HLI{13}{\PLUS}\HLI{64}
+2.C          {\VBAR}
+       _cons {\VBAR}  -.9482041   .2886333    -3.29   0.001    -1.513915   -.3824933
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    1        
+{\smallskip}
+Response: accident 
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: play     
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: insurance
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: stock    
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+accident     {\VBAR}
+       _cons {\VBAR}   .9128742   .1974695     4.62   0.000     .5258411    1.299907
+\HLI{13}{\PLUS}\HLI{64}
+play         {\VBAR}
+       _cons {\VBAR}  -.7099072   .2249096    -3.16   0.002    -1.150722   -.2690926
+\HLI{13}{\PLUS}\HLI{64}
+insurance    {\VBAR}
+       _cons {\VBAR}  -.6014307   .2123096    -2.83   0.005     -1.01755   -.1853115
+\HLI{13}{\PLUS}\HLI{64}
+stock        {\VBAR}
+       _cons {\VBAR}  -1.880142   .3337665    -5.63   0.000    -2.534312   -1.225972
+\HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+Class:    2        
+{\smallskip}
+Response: accident 
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: play     
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: insurance
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+Response: stock    
+Family:   Bernoulli
+Link:     Logit    
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{64}
+             {\VBAR} Coefficient  Std. err.      z    P>|z|     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{64}
+accident     {\VBAR}
+       _cons {\VBAR}   4.983017   3.745987     1.33   0.183    -2.358982    12.32502
+\HLI{13}{\PLUS}\HLI{64}
+play         {\VBAR}
+       _cons {\VBAR}   2.747366   1.165853     2.36   0.018     .4623372    5.032395
+\HLI{13}{\PLUS}\HLI{64}
+insurance    {\VBAR}
+       _cons {\VBAR}   2.534582   .9644841     2.63   0.009     .6442279    4.424936
+\HLI{13}{\PLUS}\HLI{64}
+stock        {\VBAR}
+       _cons {\VBAR}   1.203416   .5361735     2.24   0.025     .1525356    2.254297
+\HLI{13}{\BOTT}\HLI{64}
