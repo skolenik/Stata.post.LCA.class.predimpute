@@ -27,7 +27,7 @@
 
 {synopt:{opt lcimpute(varname)}}  specifies the name of the latent class variable to be imputed. {p_end}
 
-{synopt:{opt addm(#)}}  specifies the number of imputations to created. {p_end}
+{synopt:{opt addm(#)}}  specifies the number of imputations to be created. {p_end}
 
 {syntab:Optional}
 {synopt:{opt seed(#)}} specifies the random number seed.{p_end}
