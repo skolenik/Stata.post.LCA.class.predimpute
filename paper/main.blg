@@ -1,0 +1,63 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 3 items.
+The style file: sj.bst
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+Database file #1: post-lca.bib
+Warning--I didn't find a database entry for "akaike"
+Warning--I didn't find a database entry for "benAkivaLerman"
+Warning--I didn't find a database entry for "dykePatterson"
+Warning--I didn't find a database entry for "greene03"
+Warning--I didn't find a database entry for "kendallstuart"
+Warning--I didn't find a database entry for "hilbe93a"
+Warning--I didn't find a database entry for "hilbe94"
+Warning--I didn't find a database entry for "hilbe93b"
+Warning--I didn't find a database entry for "maddala83"
+Warning--I didn't find a database entry for "latexcompanion"
+Warning--I didn't find a database entry for "texbook"
+Warning--I didn't find a database entry for "latexbook"
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+You've used 1 entry,
+            3197 wiz_defined-function locations,
+            688 strings with 5389 characters,
+and the built_in function-call counts, 502 in all, are:
+= -- 38
+> -- 13
+< -- 3
++ -- 4
+- -- 3
+* -- 36
+:= -- 89
+add.period$ -- 5
+call.type$ -- 1
+change.case$ -- 12
+chr.to.int$ -- 7
+cite$ -- 1
+duplicate$ -- 27
+empty$ -- 44
+format.name$ -- 4
+if$ -- 98
+int.to.chr$ -- 1
+int.to.str$ -- 2
+missing$ -- 2
+newline$ -- 14
+num.names$ -- 4
+pop$ -- 15
+preamble$ -- 1
+purify$ -- 10
+quote$ -- 0
+skip$ -- 18
+stack$ -- 0
+substring$ -- 15
+swap$ -- 4
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 6
+warning$ -- 0
+while$ -- 4
+width$ -- 0
+write$ -- 21
+(There were 12 warnings)

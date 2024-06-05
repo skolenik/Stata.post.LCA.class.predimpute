@@ -1,0 +1,14 @@
+\ifnum 1=1 \def\bibname{Reference}
+\else \def\bibname{References} \fi
+\begin{thebibliography}{1}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+
+\bibitem[{{van Buuren}(2018)}]{vanbuuren:2018:fimd2}
+{van Buuren}, S. 2018.
+\newblock \emph{Flexible Imputation of Missing Data}.
+\newblock 2nd ed. Chapman \& Hall/CRC.
+
+\end{thebibliography}
