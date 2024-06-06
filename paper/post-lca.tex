@@ -6,19 +6,87 @@
 \maketitle
 
 \begin{abstract}
-This is an example article.  You should change the \verb+\input{}+ line in
-\texttt{main.tex} to point to your file.  If this is your first submission to
-the {\sl Stata Journal}, please read the following ``getting started''
-information.
+I introduce a command to multiply impute latent classes
+following \stcmd{gsem, lclass()} latent class analysis. 
+This allows properly propagating uncertainty in class 
+membership to downstream analysis that may characterize
+the demographic composition of the classes, or use 
+the class as a predictor variable in statitsical models.
 
 \keywords{\inserttag, postlca\_class\_predpute, latent class analysis, multiple imputation}
 \end{abstract}
 
 \section{Latent class analysis}
 
-Latent class analysis 
+Latent class analysis (LCA) is a commonly used statistical and quantitative
+social science technique of modeling counts in high dimensional contingency tables,
+or tables of associations of categorical variables
+\citet{hagenaars:mccutcheon:2002,mccutcheon:1987}. 
+LCA is a form of loglinear modeling, so let us explain that first.
+If the researcher has several categorical variables $X_1, X_2, \ldots, X_p$
+with categories 1 through $m_j, j=1, \ldots, p$,
+at their disposal, and can produce counts $n_{{k_1}{k_2}\ldots{k_p}}$ 
+in a complete $p$-dimensional table, the first step could be modeling
+in main effects:
 
-Running example
+\begin{equation}
+  \label{eq:loglinear:main}
+  \Expect \log n_{{k_1}{k_2}\ldots{k_p}} = 
+  \mathrm{offset} + 
+  \sum_{j=1}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
+\end{equation}
+
+\noindent
+with applicable identification constraints (such as the sum of the coefficients
+of a single variable is zero, or the coefficient for the first category 
+of a variable is zero). Parameter estimates can be obtained by maximum
+likelihood, as equation (\ref{eq:loglinear:main}) is a Poisson regression model.
+This model can be denoted as $X_1 + X_2 + \ldots + X_p$ main effects model.
+The fit of the model is assessed by the Pearson $\chi^2$ test comparing the
+expected vs. observed cell counts, or the likelihood ratio test against a saturated
+model where each cell has its own coefficient. If the model were to be found inadequate,
+the researcher can entertain adding interactions, e.g. the interaction of 
+$X_1$ and $X_2$ would have $m_1 \times m_2$ terms for each pair of values 
+of these variables, rather than $m_1 + m_2$ main effects:
+
+\begin{equation}
+  \label{eq:loglinear:x1x2}
+  \Expect \log n_{{k_1}{k_2}\ldots{k_p}} = 
+  \mathrm{offset} + 
+  \sum_{k_1=1}^{m_1} \sum_{k_2=1}^{m_2} \beta_{12,k_1k_2} +
+  \sum_{j=3}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
+\end{equation}
+
+This model can be denoted as $X_1 \# X_2 + X_3 + \ldots + X_p$.
+
+In the loglinear model notation, the latent class models 
+are models of the form $C \# (X_1 + X_2 + \ldots + X_p)$.
+Categorical latent variable $C$ is the latent class.
+The model is now a mixture of Poisson regressions,
+and maximum likelihood estimation additionally involves 
+estimating the prevalence of each class of $C$.
+
+Further extensions of latent class analysis may include:
+
+\begin{enumerate}
+  \item Analysis with interactions of the observed variables;
+  \item Analysis with complex survey data (in which case estimation proceeds
+      with \stcmd{svy} prefix, and the counts are the weighted estimates 
+      of the population totals in cells);
+  \item Constrained analyses with structural zeroes or ones 
+      (e.g. that every member of class $C=1$ must have the value
+      $X_1=1$);
+  \item Constrained analyses where some variables have identical
+      coefficients across classes.
+\end{enumerate}
+
+\subsection{Official Stata implementation}
+
+Official Stata \stcmd{gsem, lclass()} implements 
+the \textit{main effects} LCA. The syntax is that of the SEM
+families, with the variables that the arrow points to
+interpreted as the outcome variables, and the latent class
+variable being the source of the arrow:
 
 \begin{stlog}
 . webuse gsem_lca1
@@ -26,18 +94,46 @@ Running example
 . gsem (accident play insurance stock <- ), logit lclass(C 2)
 \end{stlog}
 
+The goodness of fit test against the free tabulation counts
+is provided by \stcmd{estat gof} (not available after
+the complex survey data analysis.)
+
+As LCA is implemented through \stcmd{gsem},
+all the link functions and generalized linear model families
+are supported, extending the ``mainstream'' LCA.
+
+\subsection{Hopefully useful examples}
+
+LCA has found use in analyses of complicated economic concepts
+from (measured with error) survey data.
+
+\citet{kolenikov:daley:2017} analyzed the latent classes
+of employees 
+using the U.S. Department of Labor Worker Classification Survey.
+The observed variables were (composite) 
+self-report of the employment
+status (are you an employee at your job; do you refer to your work
+as your business, your client, your job, etc.); 
+tax status
+(the forms that the worker receives from their firm: W-2, 1099, K-1, etc.);
+behavioral control 
+(functions the worker performs and the degree of control over these functions,
+such as direct reporting to somebody, schedule, permission to leave, etc.);
+and non-control composite
+(hired for fixed time or specific project). They found the best fitting
+model to contain three classes: employees-and-they-know-it (59\%),
+nonemployees-and-they-know-it (24\%), and confused (17\%) who
+classify themselves as employees but their tax documentation
+is unclear, and other variables tend to place them into non-employee status.
+
+\subsection{Scope for this package}
+
 Researchers are often interested in describing the latent classes
 or using these classes in analysis as predictors or as moderators.
 The official \semref{gsem postestimation} commands provide
 limited possibilities, namely reporting of the means
 of the dependent variables by class via \stcmd{estat lcmean}.
 For nearly all meaningful applications of LCA, this is insufficient.
-
-One possible approach is to predict the modal class for each
-observation, and use it in subsequent downstream analyses 
-treating that as fixed:
-
-
 
 The program distributed with the current package,
 \stcmd{postlca\_class\_predpute}, provides a pathway for the appropriate
@@ -111,7 +207,21 @@ but of course is strongly recommended for reproducibility of the results,
 as the underlying data are randomly simulated.
 The multiple imputation version is notably faster.
 
-\subsection{NHANES complex survey data}
+As one of many diagnostic outputs of MI, the increase in variances / standard errors
+due to imputations serves as an indication of how much of a problem
+would treating the singly imputed (e.g. modal probability) latent classes would have been.
+In the above output, the fraction of missing data (FMI)
+is 33\% to 40\%, and the relative variance increase (RVI) is the similar range 
+from 39\% to 45\%. This means that the analysis with the deterministic
+(modal) imputation of the classes would have had standard errors 
+that are about 20\% too small.
+
+\begin{stlog}
+\input{example_lca1_modal.log.tex}\nullskip
+\end{stlog}
+
+
+\subsection{NHANES complex survey data example}
 
 In many important and realistic applications of LCA, including the case
 that necessitated the development of this package, the data come from
@@ -119,9 +229,90 @@ complex survey designs that require setting the data up for the appropriate
 survey-design adjusted analyses. See \svyref{svyset}, \miref{mi svyset},
 and \citet{kolenikov:pitblado:2014}.
 
-As one of many diagnostic outputs of MI, the increase in variances / standard errors
-due to imputations serves as an indication of how much of a problem
-would treating the singly imputed (e.g. modal probability) latent classes would have been
+The standard data set for the \svyref{} commands is an extract from 
+the National Health and Nutrition Examination Survey, Round Two
+(NHANES II) data. I will use a handful of binary health outcomes
+and one ordinal outcome to demonstrate LCA; the ordinal outcome
+is arguably an extension that is not quite well covered in the
+``classical'' social science LCA.
+
+\begin{stlog}
+\input{nhanes2.log.tex}\nullskip
+\end{stlog}
+
+This analysis approximates breaking down the population
+into "generally healthy" and "unhealthy" groups, as e.g.
+the gradient of \textit{hlthstat} variable between the classes
+shows. The official \stcmd{gsem postestimation} commands
+take approximately forever to run (there is underlying
+\stcmd{margins} implementation with iterations over 
+the numeric derivatives step size used to compute the stadnard errors).
+There is an interaction of \stcmd{svy} and \stcmd{gsem} in that
+\stcmd{svy} forces its own starting values that happen to be 
+infeasible for LCA, hence the need to specify the initial random search.
+The use of the \stcmd{postlca\_class\_predpute} command
+makes it possible to run the analylsis much faster,
+and to conduct complementary analyses,
+e.g. analysis of the racial composition of the two classes.
+
+\begin{stlog}
+\input{example_nhanes2_predpute.log}\nullskip
+\end{stlog}
+
+\subsection{Choosing the number of imputations}
+
+One ``researcher's degrees of freedom'' aspect of this analysis
+is the number of imputations $M$ that need to be created.
+What this number affects the most is the stability of the standard
+errors obtained through the multiple imputation process.
+This stability is internally assessed with estimated
+degrees of freedom associated with the variance estimate
+\citep{barnard:rubin:1999}. With $M=10$ imputations,
+the smaller ``poor health'' class have about 50 degrees of freedom:
+
+\begin{stlog}
+\input{example_nhanes2_dftable10.log}\nullskip
+\end{stlog}
+
+The public use version of the NHANES II data uses the approximate
+design that has 62 PSU in 31 strata, resulting in 31 design degrees 
+of freedom. The imputation degrees of freedom barely exceed that.
+Let us push the number of imputations up:
+
+\begin{stlog}
+\input{example_nhanes2_dftable62.log}\nullskip
+\end{stlog}
+
+The MI degrees of freedom are now comfortably above 600.
+In many i.i.d. data situations, increasing the number of imputations
+to several dozens can often send the MI degrees of freedom to 
+approximate infinity (the reported numbers are in hundreds 
+of thousands). With complex survey designs that have limited
+degrees of freedom within each implicate, this may not materialize.
+Researchers are encouraged to adopt the workflow where, in parallel,
+they
+
+\begin{enumerate}
+  \item start with a small number of imputations, like \stcmd{addm(10)}
+        in the example above, and develop the analysis code for all
+        the substantive analyses, and
+  \item working with the key outcomes or analyses, 
+        experiment with several values of $M$ to find a reasonable
+        trade-off when degrees of freedom exceed the sample size 
+        for i.i.d. data, and/or exceed the design degrees of freedom
+        for complex survey data by a factor of 3--5.
+\end{enumerate}
+
+Then a chosen value of $M$ can be used for all analyses in the paper.
+
+Even a large number of replications may not protect the researcher
+from classes that may have structural zeroes. These produce
+zero standard errors and missing degrees of freedom and 
+variance increase statistics:
+
+\begin{stlog}
+\input{example_nhanes2_dftable62gh.log}\nullskip
+\end{stlog}
 
 
 
