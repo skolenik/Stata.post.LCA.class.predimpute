@@ -120,3 +120,65 @@ highbp       {\VBAR}
         cut3 {\VBAR}   2.647239   .1192958                      2.403934    2.890544
         cut4 {\VBAR}   24.64389    14.1421                     -4.199113    53.48689
 \HLI{13}{\BOTT}\HLI{64}
+{\smallskip}
+. set rmsg on     
+r; t=0.00 14:46:16
+{\smallskip}
+. estat lcprob
+{\smallskip}
+Latent class marginal probabilities
+{\smallskip}
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Design df       =          31
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}            Delta-method
+             {\VBAR}     Margin   std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+           C {\VBAR}
+          1  {\VBAR}   .2091523   .0208315      .1698206    .2547976
+          2  {\VBAR}   .7908477   .0208315      .7452024    .8301794
+\HLI{13}{\BOTT}\HLI{48}
+r; t=10.03 14:46:26
+{\smallskip}
+. estat lcmean
+{\smallskip}
+Latent class marginal means
+{\smallskip}
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Design df       =          31
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}            Delta-method
+             {\VBAR}     Margin   std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+1            {\VBAR}
+    heartatk {\VBAR}   .1329681   .0132672      .1081603    .1624295
+    diabetes {\VBAR}   .1436535   .0099036      .1246119    .1650562
+      highbp {\VBAR}   .6045577    .018375      .5665363    .6413552
+             {\VBAR}
+    hlthstat {\VBAR}
+  Excellent  {\VBAR}   .0251111   .0217959      .0041733    .1366775
+  Very good  {\VBAR}   .0683138    .021455      .0355579     .127263
+       Good  {\VBAR}   .3427603   .0254834      .2928195    .3964437
+       Fair  {\VBAR}   .3375009   .0210993      .2958981    .3817814
+       Poor  {\VBAR}   .2263139   .0341724      .1642029    .3033906
+\HLI{13}{\PLUS}\HLI{48}
+2            {\VBAR}
+    heartatk {\VBAR}     .00228   .0014287      .0006343    .0081599
+    diabetes {\VBAR}   .0053611   .0032231      .0015686    .0181559
+      highbp {\VBAR}   .3064836   .0159419      .2749643    .3399221
+             {\VBAR}
+    hlthstat {\VBAR}
+  Excellent  {\VBAR}   .3412286     .01086       .319438    .3637112
+  Very good  {\VBAR}   .3296838   .0082507      .3130796     .346724
+       Good  {\VBAR}   .2629283   .0094265      .2441597    .2826002
+       Fair  {\VBAR}   .0661594   .0073704       .052623    .0828732
+       Poor  {\VBAR}   1.98e-11   2.81e-10      5.68e-24    .9857545
+\HLI{13}{\BOTT}\HLI{48}
+r; t=80.58 14:47:47
+{\smallskip}
+. set rmsg off    
+{\smallskip}
