@@ -1,0 +1,31 @@
+. webuse gsem_lca1.dta, clear
+(Latent class analysis)
+{\smallskip}
+. quietly gsem (accident play insurance stock <-), logit lclass(C 2)
+{\smallskip}
+. predict post_1, class(1) classposterior
+{\smallskip}
+. gen byte lclass_modal = 2 - (post_1 > 0.50)
+{\smallskip}
+. mean post_1 lclass_modal
+{\smallskip}
+Mean estimation                            Number of obs = 216
+{\smallskip}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}       Mean   Std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+      post_1 {\VBAR}   .7207539   .0257112      .6700756    .7714321
+lclass_modal {\VBAR}   1.328704   .0320361      1.265559    1.391849
+\HLI{13}{\BOTT}\HLI{48}
+{\smallskip}
+. mean accident, over(lclass_modal)
+{\smallskip}
+Mean estimation                                       Number of obs = 216
+{\smallskip}
+\HLI{24}{\TOPT}\HLI{48}
+                        {\VBAR}       Mean   Std. err.     [95\% conf. interval]
+\HLI{24}{\PLUS}\HLI{48}
+c.accident@lclass_modal {\VBAR}
+                     1  {\VBAR}   .6896552   .0385529      .6136651    .7656452
+                     2  {\VBAR}          1          0             .           .
+\HLI{24}{\BOTT}\HLI{48}

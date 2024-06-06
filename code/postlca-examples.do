@@ -30,6 +30,15 @@ mi estimate : mean accident, over(lclass)
 set rmsg off
 sjlog close, replace
 
+sjlog using example_lca1_modal, replace
+webuse gsem_lca1.dta, clear
+quietly gsem (accident play insurance stock <-), logit lclass(C 2)
+predict post_1, class(1) classposterior
+gen byte lclass_modal = 2 - (post_1 > 0.50)
+mean post_1 lclass_modal
+mean accident, over(lclass_modal)
+sjlog close, replace
+
 sjlog using nhanes2, replace
 frame change default
 cap frame nhanes2: clear
@@ -44,6 +53,10 @@ svy , subpop(if hlthstat<8) : ///
 		(heartatk diabetes highbp <-, logit) ///
 		(hlthstat <-, ologit) /// 
 	, lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
+set rmsg on	
+estat lcprob
+estat lcmean
+set rmsg off	
 sjlog close, replace
 
 sjlog using example_nhanes2_predpute, replace
@@ -57,8 +70,7 @@ sjlog close, replace
 
 
 sjlog using example_nhanes2_dftable10, replace
-mi estimate : prop hlthstat if hlthstat < 8, over(lclass) 
-mi estimate, dftable
+mi estimate , dftable : prop race, over(lclass) 
 sjlog close, replace
 
 sjlog using example_nhanes2_dftable62, replace
@@ -69,8 +81,11 @@ qui svy , subpop(if hlthstat<8) : ///
 		(hlthstat <-, ologit) /// 
 	, lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
 postlca_class_predpute, lcimpute(lclass) addm(62) seed(9752)
-mi estimate : prop hlthstat if hlthstat < 8, over(lclass) 
-mi estimate, dftable
+mi estimate , dftable : prop race, over(lclass) 
+sjlog close, replace
+
+sjlog using example_nhanes2_dftable62gh, replace
+mi estimate , dftable : prop hlthstat if hlthstat < 8, over(lclass) 
 sjlog close, replace
 
 exit

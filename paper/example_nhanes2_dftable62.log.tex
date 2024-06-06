@@ -17,60 +17,52 @@ Sampling weights: finalwgt
  Sampling unit 1: psu
            FPC 1: <zero>
 {\smallskip}
-. mi estimate : prop hlthstat if hlthstat < 8, over(lclass) 
+. mi estimate : prop race, over(lclass) 
 {\smallskip}
 Multiple-imputation estimates     Imputations     =         62
-Proportion estimation             Number of obs   =     10,335
-                                  Average RVI     =          .
-                                  Largest FMI     =          .
-                                  Complete DF     =      10334
-DF adjustment:   Small sample     DF:     min     =     234.37
-                                          avg     =          .
-Within VCE type:     Analytic             max     =          .
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.2483
+                                  Largest FMI     =     0.2893
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =     671.70
+                                          avg     =   1,786.62
+Within VCE type:     Analytic             max     =   3,092.35
 {\smallskip}
-\HLI{16}{\TOPT}\HLI{48}
-                {\VBAR}                                   Normal
-                {\VBAR} Proportion   Std. err.     [95\% conf. interval]
-\HLI{16}{\PLUS}\HLI{48}
-hlthstat@lclass {\VBAR}
-   Excellent 1  {\VBAR}   .0183993   .0033919      .0117252    .0250734
-   Excellent 2  {\VBAR}   .3111818   .0054853      .3004287    .3219348
-   Very good 1  {\VBAR}   .0573944   .0062471      .0450869     .069702
-   Very good 2  {\VBAR}   .3212476   .0056361      .3101976    .3322976
-        Good 1  {\VBAR}   .2947403   .0104573      .2742011    .3152794
-        Good 2  {\VBAR}   .2804536   .0055871      .2694969    .2914104
-        Fair 1  {\VBAR}   .3656239    .010418       .345181    .3860669
-        Fair 2  {\VBAR}    .087117     .00393      .0793974    .0948366
-        Poor 1  {\VBAR}   .2638421   .0087535      .2466811    .2810031
-        Poor 2  {\VBAR}          0  (no observations)
-\HLI{16}{\BOTT}\HLI{48}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}                                   Normal
+             {\VBAR} Proportion   Std. err.     [95\% conf. interval]
+\HLI{13}{\PLUS}\HLI{48}
+ race@lclass {\VBAR}
+    White 1  {\VBAR}   .8369206   .0079313      .8213584    .8524827
+    White 2  {\VBAR}   .8900061   .0038498      .8824571     .897555
+    Black 1  {\VBAR}   .1455849    .007628      .1306162    .1605536
+    Black 2  {\VBAR}   .0900031   .0035541      .0830334    .0969728
+    Other 1  {\VBAR}   .0174946   .0029465      .0117091      .02328
+    Other 2  {\VBAR}   .0199908    .001709        .01664    .0233417
+\HLI{13}{\BOTT}\HLI{48}
 Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
 {\smallskip}
 . mi estimate, dftable
 {\smallskip}
 Multiple-imputation estimates     Imputations     =         62
-Proportion estimation             Number of obs   =     10,335
-                                  Average RVI     =          .
-                                  Largest FMI     =          .
-                                  Complete DF     =      10334
-DF adjustment:   Small sample     DF:     min     =     234.37
-                                          avg     =          .
-Within VCE type:     Analytic             max     =          .
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.2483
+                                  Largest FMI     =     0.2893
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =     671.70
+                                          avg     =   1,786.62
+Within VCE type:     Analytic             max     =   3,092.35
 {\smallskip}
-\HLI{16}{\TOPT}\HLI{48}
-                {\VBAR}                                          Normal
-                {\VBAR} Proportion   Std. err.           df   std. err.
-\HLI{16}{\PLUS}\HLI{48}
-hlthstat@lclass {\VBAR}
-   Excellent 1  {\VBAR}   .0183993   .0033919         309.7       32.68
-   Excellent 2  {\VBAR}   .3111818   .0054853        6242.4        3.09
-   Very good 1  {\VBAR}   .0573944   .0062471         234.4       41.21
-   Very good 2  {\VBAR}   .3212476   .0056361        4001.1        5.03
-        Good 1  {\VBAR}   .2947403   .0104573         575.3       20.57
-        Good 2  {\VBAR}   .2804536   .0055871        2155.5        8.23
-        Fair 1  {\VBAR}   .3656239    .010418        1033.8       13.71
-        Fair 2  {\VBAR}    .087117     .00393         549.1       21.27
-        Poor 1  {\VBAR}   .2638421   .0087535        4603.6        4.40
-        Poor 2  {\VBAR}          0  (no observations)
-\HLI{16}{\BOTT}\HLI{48}
+\HLI{13}{\TOPT}\HLI{48}
+             {\VBAR}                                          Normal
+             {\VBAR} Proportion   Std. err.           df   std. err.
+\HLI{13}{\PLUS}\HLI{48}
+ race@lclass {\VBAR}
+    White 1  {\VBAR}   .8369206   .0079313        1100.3       13.14
+    White 2  {\VBAR}   .8900061   .0038498        2639.5        7.08
+    Black 1  {\VBAR}   .1455849    .007628        1004.8       13.98
+    Black 2  {\VBAR}   .0900031   .0035541        2211.1        8.08
+    Other 1  {\VBAR}   .0174946   .0029465         671.7       18.45
+    Other 2  {\VBAR}   .0199908    .001709        3092.4        6.26
+\HLI{13}{\BOTT}\HLI{48}
 Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.

@@ -1,0 +1,32 @@
+{\smallskip}
+. 
+. mi estimate , dftable : prop hlthstat if hlthstat < 8, over(lclass) 
+{\smallskip}
+Multiple-imputation estimates     Imputations     =         62
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =     234.37
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+{\smallskip}
+\HLI{16}{\TOPT}\HLI{48}
+                {\VBAR}                                          Normal
+                {\VBAR} Proportion   Std. err.           df   std. err.
+\HLI{16}{\PLUS}\HLI{48}
+hlthstat@lclass {\VBAR}
+   Excellent 1  {\VBAR}   .0183993   .0033919         309.7       32.68
+   Excellent 2  {\VBAR}   .3111818   .0054853        6242.4        3.09
+   Very good 1  {\VBAR}   .0573944   .0062471         234.4       41.21
+   Very good 2  {\VBAR}   .3212476   .0056361        4001.1        5.03
+        Good 1  {\VBAR}   .2947403   .0104573         575.3       20.57
+        Good 2  {\VBAR}   .2804536   .0055871        2155.5        8.23
+        Fair 1  {\VBAR}   .3656239    .010418        1033.8       13.71
+        Fair 2  {\VBAR}    .087117     .00393         549.1       21.27
+        Poor 1  {\VBAR}   .2638421   .0087535        4603.6        4.40
+        Poor 2  {\VBAR}          0  (no observations)
+\HLI{16}{\BOTT}\HLI{48}
+Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
+{\smallskip}
+. 

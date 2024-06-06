@@ -1,10 +1,10 @@
 . set rmsg on
-r; t=0.00 13:42:23
+r; t=0.00 14:46:00
 {\smallskip}
 . postlca_class_predpute, lcimpute(lclass) addm(10) seed(12345)
 (216 missing values generated)
 (10 imputations added; {\sltt{M}} = 10)
-r; t=0.05 13:42:23
+r; t=0.05 14:46:00
 {\smallskip}
 . mi estimate : prop lclass
 {\smallskip}
@@ -25,7 +25,7 @@ Within VCE type:     Analytic             max     =      55.99
           1  {\VBAR}   .7236111   .0367281      .6500355    .7971867
           2  {\VBAR}   .2763889   .0367281      .2028133    .3499645
 \HLI{13}{\BOTT}\HLI{48}
-r; t=0.65 13:42:23
+r; t=2.01 14:46:02
 {\smallskip}
 . mi estimate : mean accident, over(lclass)
 {\smallskip}
@@ -46,7 +46,7 @@ c.accident@lclass {\VBAR}
                2  {\VBAR}   .9934973   .0135709      .9659633    1.021031
 \HLI{18}{\BOTT}\HLI{48}
 Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
-r; t=0.72 13:42:24
+r; t=2.40 14:46:04
 {\smallskip}
 . set rmsg off
 {\smallskip}

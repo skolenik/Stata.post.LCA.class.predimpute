@@ -1,5 +1,5 @@
 . set rmsg on
-r; t=0.00 13:53:50
+r; t=0.00 14:47:47
 {\smallskip}
 . postlca_class_predpute, lcimpute(lclass) addm(10) seed(5678)
 (10,351 missing values generated)
@@ -11,7 +11,7 @@ Sampling weights: finalwgt
         Strata 1: strata
  Sampling unit 1: psu
            FPC 1: <zero>
-r; t=0.20 13:53:50
+r; t=0.22 14:47:47
 {\smallskip}
 . mi estimate : prop lclass
 {\smallskip}
@@ -32,7 +32,7 @@ Within VCE type:     Analytic             max     =      73.85
           1  {\VBAR}   .2675394   .0053851       .256809    .2782698
           2  {\VBAR}   .7324606   .0053851      .7217302     .743191
 \HLI{13}{\BOTT}\HLI{48}
-r; t=0.84 13:53:51
+r; t=1.53 14:47:49
 {\smallskip}
 . mi estimate : prop hlthstat if hlthstat < 8, over(lclass)
 {\smallskip}
@@ -62,33 +62,33 @@ hlthstat@lclass {\VBAR}
         Poor 2  {\VBAR}          0  (no observations)
 \HLI{16}{\BOTT}\HLI{48}
 Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
-r; t=1.06 13:53:52
+r; t=3.01 14:47:52
 {\smallskip}
 . mi estimate : prop race, over(lclass)
 {\smallskip}
 Multiple-imputation estimates     Imputations     =         10
 Proportion estimation             Number of obs   =     10,351
-                                  Average RVI     =     0.3605
-                                  Largest FMI     =     0.4457
+                                  Average RVI     =     0.4677
+                                  Largest FMI     =     0.4671
                                   Complete DF     =      10350
-DF adjustment:   Small sample     DF:     min     =      49.67
-                                          avg     =     221.74
-Within VCE type:     Analytic             max     =     369.53
+DF adjustment:   Small sample     DF:     min     =      45.27
+                                          avg     =     119.43
+Within VCE type:     Analytic             max     =     321.80
 {\smallskip}
 \HLI{13}{\TOPT}\HLI{48}
              {\VBAR}                                   Normal
              {\VBAR} Proportion   Std. err.     [95\% conf. interval]
 \HLI{13}{\PLUS}\HLI{48}
  race@lclass {\VBAR}
-    White 1  {\VBAR}   .8386285   .0080726      .8226698    .8545871
-    White 2  {\VBAR}   .8893271   .0039143      .8816299    .8970242
-    Black 1  {\VBAR}   .1449351   .0076096       .129914    .1599563
-    Black 2  {\VBAR}    .090294   .0035891      .0832346    .0973535
-    Other 1  {\VBAR}   .0164364   .0031837      .0100406    .0228322
-    Other 2  {\VBAR}   .0203789   .0017966      .0168411    .0239168
+    White 1  {\VBAR}    .839782   .0093485      .8209563    .8586078
+    White 2  {\VBAR}   .8889046   .0042799      .8804196    .8973897
+    Black 1  {\VBAR}   .1434614   .0085447      .1263568     .160566
+    Black 2  {\VBAR}   .0908358   .0038489      .0832192    .0984524
+    Other 1  {\VBAR}   .0167566   .0031195      .0105146    .0229986
+    Other 2  {\VBAR}   .0202596   .0017697      .0167778    .0237413
 \HLI{13}{\BOTT}\HLI{48}
 Note: Numbers of observations in {\bftt{e(_N)}} vary among imputations.
-r; t=1.00 13:53:53
+r; t=2.98 14:47:55
 {\smallskip}
 . set rmsg off
 {\smallskip}
