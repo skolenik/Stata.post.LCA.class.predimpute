@@ -102,10 +102,30 @@ As LCA is implemented through \stcmd{gsem},
 all the link functions and generalized linear model families
 are supported, extending the ``mainstream'' LCA.
 
-\subsection{Hopefully useful examples}
+\subsection{Examples }
 
 LCA has found use in analyses of complicated economic concepts
-from (measured with error) survey data.
+from survey data, and in assessment of measurement errors
+that arise in the process.
+
+\citet{biemer:2004} provided analysis of labor force classification
+status (employed, unemployed, and out of labor force) following changes
+in the survey instrument used in the Current Population Survey (CPS).
+The latent classes are the true 
+LFS categories, and the observed variables are the corresponding 
+survey measurements, demographics, and survey interview mode.
+The model is a variation of LCA that accounts for the survey methodology
+aspects of CPS: 
+its panel nature (responses are collected over four consecutive months) 
+and response mode (proxy reporting when a family member provides
+the survey responses rather than the target person.)
+He found that measurement of being employed and not being in labor force
+are highly accurate (98\% and 97\% accuracy) while measurement of 
+being unemployed is much less accurate (between 74\% and 81\% depending
+on the analysis year.) LCA allowed to further attribute the drop in
+accuracy of the unemployment status measurement to proxy reporting,
+and to the problems with measuring the employment status when 
+the worker is laid off.
 
 \citet{kolenikov:daley:2017} analyzed the latent classes
 of employees 
