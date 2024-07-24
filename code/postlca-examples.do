@@ -1,4 +1,4 @@
-
+cd ../paper
 
 cap log close
 set rmsg off
