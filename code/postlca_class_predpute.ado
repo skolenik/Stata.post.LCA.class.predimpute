@@ -98,6 +98,8 @@ program define postlca_class_predpute, rclass
 	* (vi.b) imputation parameters
 	nobreak {
 		gen byte `lcimpute' = .
+		label variable `lcimpute' "Imputed latent class (to be used via MI)"
+
 		mi set wide
 		mi register imputed `lcimpute'
 		mi set M = `addm'
