@@ -1,0 +1,36 @@
+. bysort method (rep): sum y6cl3pr if touse3
+{\smallskip}
+\HLI{158}
+-> method = modal
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+     y6cl3pr {\VBAR}        201    1.450547    .1193368   1.227596   1.918931
+{\smallskip}
+\HLI{158}
+-> method = predpute_5
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+     y6cl3pr {\VBAR}        210    1.406871    .0888037   1.181305   1.795226
+{\smallskip}
+\HLI{158}
+-> method = predpute_50
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+     y6cl3pr {\VBAR}        210    1.406623    .0804418   1.243716   1.681721
+{\smallskip}
+{\smallskip}
+. mean y6cl3se if touse3, over(n_method)
+{\smallskip}
+Mean estimation                                  Number of obs = 621
+{\smallskip}
+\HLI{19}{\TOPT}\HLI{48}
+                   {\VBAR}       Mean   Std. err.     [95\% conf. interval]
+\HLI{19}{\PLUS}\HLI{48}
+c.y6cl3se@n_method {\VBAR}
+            modal  {\VBAR}   .0871691   .0030581      .0811637    .0931746
+       predpute_5  {\VBAR}   .1061198   .0040692      .0981286     .114111
+      predpute_50  {\VBAR}    .104679   .0037827      .0972505    .1121075
+\HLI{19}{\BOTT}\HLI{48}

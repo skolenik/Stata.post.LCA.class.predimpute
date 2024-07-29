@@ -1,0 +1,36 @@
+. bysort method (rep): sum class1pr if touse3
+{\smallskip}
+\HLI{158}
+-> method = modal
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+    class1pr {\VBAR}        212    .3769528    .1657361       .055       .849
+{\smallskip}
+\HLI{158}
+-> method = predpute_5
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+    class1pr {\VBAR}        210    .3548438    .1430702      .0938      .7692
+{\smallskip}
+\HLI{158}
+-> method = predpute_50
+{\smallskip}
+    Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
+\HLI{13}{\PLUS}\HLI{57}
+    class1pr {\VBAR}        210    .3551265     .143285     .08862     .77094
+{\smallskip}
+{\smallskip}
+. mean class1se if touse3, over(n_method)
+{\smallskip}
+Mean estimation                                   Number of obs = 632
+{\smallskip}
+\HLI{20}{\TOPT}\HLI{48}
+                    {\VBAR}       Mean   Std. err.     [95\% conf. interval]
+\HLI{20}{\PLUS}\HLI{48}
+c.class1se@n_method {\VBAR}
+             modal  {\VBAR}   .0142775   .0001356      .0140112    .0145438
+        predpute_5  {\VBAR}    .019006   .0002141      .0185854    .0194265
+       predpute_50  {\VBAR}   .0185242   .0001543      .0182211    .0188272
+\HLI{20}{\BOTT}\HLI{48}

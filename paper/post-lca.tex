@@ -334,7 +334,135 @@ variance increase statistics:
 \input{example_nhanes2_dftable62gh.log}\nullskip
 \end{stlog}
 
+\section{Simulation}
 
+So how much of a problem is the modal imputation of the latent classes?
+I ran a small simulation to investigate. Samples were taken from
+a model with the classes, five binary indicators and one additional 
+continuous variable not used in the model as follows:
+
+\begin{tabular}{l|ccc}
+   \noalign{\smallskip}
+  \hline
+  \noalign{\smallskip}
+  Variable & Class 1 & Class 2 & Class 3 \\
+  \noalign{\smallskip}
+  \hline
+  \noalign{\smallskip}
+  Class probability & 0.4 & 0.4 & 0.2 \\
+  $\mathbb{P}[y_1=1|C]$ & 0.7 & 0.3 & 0.6 \\
+  $\mathbb{P}[y_2=1|C]$ & 0.8 & 0.5 & 0.6 \\
+  $\mathbb{P}[y_3=1|C]$ & 0.5 & 0.4 & 0.7 \\
+  $\mathbb{P}[y_4=1|C]$ & 0.5 & 0.3 & 0.7 \\
+  $\mathbb{P}[y_5=1|C]$ & 0.8 & 0.4 & 0.3 \\
+  \noalign{\smallskip}
+  \hline
+  \noalign{\smallskip}  
+  $y_6\sim N(\mu_c,1)$ & 1 & $\sqrt{2}=1.41$ & $\sqrt{3}=1.73$ \\
+  \noalign{\smallskip}
+  \hline
+  \noalign{\smallskip}  
+\end{tabular}
+
+The LCA model with outcomes $y_1$ through $y_5$ was estimated,
+and the classes were predicted using the posterior modal prediction,
+multiple imputation with $M=5$ imputed data sets, and $M=50$ imputed 
+data sets.
+(To be precise, there was a single imputation with $M=50$, but 
+two versions were run: \stcmd{mi estimate , imp(1/5)} for the limited
+application with $M=5$, and without the \stcmd{imp()} option for the full
+set of $M=50$.) Inspecting the individual runs visually, a shorter set
+of imputations often results in insufficient detail, namely failing to 
+capture realizations of (posterior) rare classes.
+
+There were at least two complications with the simulation. 
+First, the classes in any LCA model are only identified up to
+a permutation of the class labels. 
+To wit, there are no distinguishable differences between 
+estimates when say classes 1 and 2 are swapped in a model with 2+ classes.
+The likelihoods are the same, the point estimates are likely to be
+the same within numeric accuracy.
+In any particular run of the \stcmd{gsem, lclass()} command, 
+the classes depend first and foremost on the starting values. 
+The help file 
+\stcmd{help gsem\_estimation\_options}\verb|##|\stcmd{startvalues()}
+outlines the possible options:
+
+\begin{itemize}
+  \item In my own practical work, I typically use 
+    \stcmd{startvalues(randomid), draws(10)} or \stcmd{draws(20)}
+    to get this many random assignments of the starting classes,
+    and having Stata run the EM algorithm to get some decent 
+    starting values for the gradient-based optimization methods.
+  \item For the simulation purposes, you have to fix either 
+    the initial assignment of classes, or the the starting values 
+    of the estimates. The former is implementable with 
+    \stcmd{startvalues(classid \textit{true\_class})} since 
+    the latter is, of course, known. Strangely, in this simulation,
+    this did not work out well as it resulted in convergence issues:
+    it has been pushing the model into areas of the parameter space
+    where the likelihood was too flat to climb out of.
+  \item The resulting simulation specification I used was a combination
+    of \stcmd{from(b0) startvalues(jitter 0.1, draws(10))}. 
+    The value of the starting matrix \stcmd{b0} was obtained
+    from a sample of size $10^6$ computed once outside of the simulation.
+    Jitter was added to allow some exploration of the sample optima 
+    near that point.
+\end{itemize}
+
+The second complication of the simulation was that in some runs,
+the \stcmd{mi estimate} calls with imputed classes were returning 
+errors. This may be a risk of a third-party written imputation routine.
+The author will investigate this with Stata Corp developers as this
+article progresses.
+
+\begin{stlog}
+  \input{simul_failures.log.tex}\nullskip
+\end{stlog}
+  
+  
+
+With these limitations in mind, here are the simulation results.
+
+\begin{stlog} 
+  \input{imul_class1pr.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{imul_class1pr_se.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y1cl2pr.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y1cl2pr_se.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y4cl1pr.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y4cl1pr_se.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y6cl1pr.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y6cl1pr_se.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y6cl3pr.log.tex}\nullskip
+\end{stlog}
+
+\begin{stlog} 
+  \input{simul_y6cl3pr_se.log.tex}\nullskip
+\end{stlog}
 
 \newpage
 
