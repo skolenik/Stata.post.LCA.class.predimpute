@@ -1,12 +1,12 @@
-. mean y4cl1pr if touse3, over(n_method)
+. mean y4cl1pr if touse3 \& y4cl1pr>0.01 \& y4cl1pr<0.99, over(n_method)
 {\smallskip}
-Mean estimation                                  Number of obs = 632
+Mean estimation                                Number of obs = 4,687
 {\smallskip}
 \HLI{19}{\TOPT}\HLI{48}
                    {\VBAR}       Mean   Std. err.     [95\% conf. interval]
 \HLI{19}{\PLUS}\HLI{48}
 c.y4cl1pr@n_method {\VBAR}
-            modal  {\VBAR}   .4693585   .0126072      .4446013    .4941157
-       predpute_5  {\VBAR}    .478399   .0064314      .4657695    .4910285
-      predpute_50  {\VBAR}   .4790298    .006341      .4665778    .4914818
+            modal  {\VBAR}   .5134519   .0027162      .5081269    .5187769
+       predpute_5  {\VBAR}   .4861217   .0018979      .4824009    .4898424
+      predpute_50  {\VBAR}   .4862154    .001881      .4825277     .489903
 \HLI{19}{\BOTT}\HLI{48}

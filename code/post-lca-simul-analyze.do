@@ -16,7 +16,8 @@ tabulate method
 sjlog close, replace
 
 cap drop touse3
-bysort rep (method) : gen byte touse3 = (_N==3)
+replace seed = rep if seed == .
+bysort rep seed (method) : gen byte touse3 = (_N==3)
 assert inlist(touse3, 0, 1)
 
 * class probablities are biased
@@ -32,22 +33,22 @@ sjlog close, replace
 
 * variable in the model: target 0.3
 sjlog using simul_y1cl2pr, replace
-mean y1cl2pr if touse3, over(n_method)
+mean y1cl2pr if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99, over(n_method)
 sjlog close, replace
 
 sjlog using simul_y1cl2pr_se, replace
-bysort method (rep): sum y1cl2pr if touse3
-mean y1cl2se if touse3, over(n_method)
+bysort method (rep): sum y1cl2pr if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99
+mean y1cl2se if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99, over(n_method)
 sjlog close, replace
 
 * variable in the model: target 0.5
 sjlog using simul_y4cl1pr, replace
-mean y4cl1pr if touse3, over(n_method)
+mean y4cl1pr if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99, over(n_method)
 sjlog close, replace
 
 sjlog using simul_y4cl1pr_se, replace
-bysort method (rep): sum y4cl1pr if touse3
-mean y4cl1se if touse3, over(n_method)
+bysort method (rep): sum y4cl1pr if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99
+mean y4cl1se if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99, over(n_method)
 sjlog close, replace
 
 * variable not in the model: target 1

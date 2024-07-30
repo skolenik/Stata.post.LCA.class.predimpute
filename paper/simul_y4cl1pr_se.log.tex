@@ -1,36 +1,36 @@
-. bysort method (rep): sum y4cl1pr if touse3
+. bysort method (rep): sum y4cl1pr if touse3 \& y4cl1pr>0.01 \& y4cl1pr<0.99
 {\smallskip}
 \HLI{158}
 -> method = modal
 {\smallskip}
     Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
 \HLI{13}{\PLUS}\HLI{57}
-     y4cl1pr {\VBAR}        212    .4693585    .1835638          0          1
+     y4cl1pr {\VBAR}      1,487    .5134519    .1047403   .0546875   .8440678
 {\smallskip}
 \HLI{158}
 -> method = predpute_5
 {\smallskip}
     Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
 \HLI{13}{\PLUS}\HLI{57}
-     y4cl1pr {\VBAR}        210     .478399    .0931995          0   .7121175
+     y4cl1pr {\VBAR}      1,600    .4861217    .0759155   .0521549   .9703288
 {\smallskip}
 \HLI{158}
 -> method = predpute_50
 {\smallskip}
     Variable {\VBAR}        Obs        Mean    Std. dev.       Min        Max
 \HLI{13}{\PLUS}\HLI{57}
-     y4cl1pr {\VBAR}        210    .4790298    .0918895          0   .7082694
+     y4cl1pr {\VBAR}      1,600    .4862154    .0752401   .0491738   .9807849
 {\smallskip}
 {\smallskip}
-. mean y4cl1se if touse3, over(n_method)
+. mean y4cl1se if touse3 \& y4cl1pr>0.01 \& y4cl1pr<0.99, over(n_method)
 {\smallskip}
-Mean estimation                                  Number of obs = 632
+Mean estimation                                Number of obs = 4,687
 {\smallskip}
 \HLI{19}{\TOPT}\HLI{48}
                    {\VBAR}       Mean   Std. err.     [95\% conf. interval]
 \HLI{19}{\PLUS}\HLI{48}
 c.y4cl1se@n_method {\VBAR}
-            modal  {\VBAR}   .0233971   .0006353      .0221495    .0246447
-       predpute_5  {\VBAR}   .0343111   .0007482      .0328417    .0357804
-      predpute_50  {\VBAR}    .033702   .0006853      .0323564    .0350477
+            modal  {\VBAR}   .0257628   .0001536      .0254616    .0260639
+       predpute_5  {\VBAR}   .0342909   .0002728      .0337561    .0348258
+      predpute_50  {\VBAR}   .0338453   .0002555      .0333444    .0343461
 \HLI{19}{\BOTT}\HLI{48}

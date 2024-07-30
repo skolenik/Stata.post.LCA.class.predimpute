@@ -424,45 +424,92 @@ article progresses.
 
 With these limitations in mind, here are the simulation results.
 
-\begin{stlog} 
-  \input{imul_class1pr.log.tex}\nullskip
-\end{stlog}
+Class probabilities are biased for the multiple imputation class prediction
+methods (the population value for class 1 was 0.4.)
 
 \begin{stlog} 
-  \input{imul_class1pr_se.log.tex}\nullskip
+  \input{simul_class1pr.log.tex}\nullskip
 \end{stlog}
+
+The modal method exhibits greater variability
+in class probabilities than the imputation methods.
+The standard errors are severly biased down for all methods. 
+Multiple imputation with more replicates has 
+more stable standard errors.
+
+\begin{stlog} 
+  \input{simul_class1pr_se.log.tex}\nullskip
+\end{stlog}
+
+Turning to the outcomes in the model,
+I picked two random summaries out of 15 
+(=5 outcomes $\times$ 3 classes).
+For the outcome $y_1$ in class 2, estimates are biased
+away from the true value of 0.3 for the modal method:
 
 \begin{stlog} 
   \input{simul_y1cl2pr.log.tex}\nullskip
 \end{stlog}
 
+The same observations concerning the standard errors apply: 
+the variability of the modal method estimates is greater than 
+the multiple imputation estimates, the standard errors are biased
+for all methods, and the standard errors are 
+more stable with the greater number of replicates.
+
 \begin{stlog} 
   \input{simul_y1cl2pr_se.log.tex}\nullskip
 \end{stlog}
+
+Another outcome summarized, $y_4$ in class 1, has the target value
+of 0.5. Biases are in opposite directions for the modal method
+and multiple imputation methods. 
 
 \begin{stlog} 
   \input{simul_y4cl1pr.log.tex}\nullskip
 \end{stlog}
 
+Problems with the variability
+and its estimation with the standard errors persist.
+
 \begin{stlog} 
   \input{simul_y4cl1pr_se.log.tex}\nullskip
 \end{stlog}
 
+Moving now to invetstigate the variable outside the model,
+$y_6$, we observe that the estimates are severely biased
+towards the pooled mean.
+
 \begin{stlog} 
   \input{simul_y6cl1pr.log.tex}\nullskip
+  \input{simul_y6cl3pr.log.tex}\nullskip
 \end{stlog}
+
+The modal method continues to exhibit greater variability
+than the imputation methods.
+For this outcome, however, the standard errors are much closer
+to their targets. The standard errors of the modal method 
+(mean of 0.058 for class 1) 
+underestimate the true Monte Carlo variability (mean of 0.078), 
+while the multiple imputation standard errors are biased upwards
+(0.071 vs. the targets of 0.060).
+Multiple imputation with more replicates has 
+more stable standard errors.
 
 \begin{stlog} 
   \input{simul_y6cl1pr_se.log.tex}\nullskip
 \end{stlog}
 
-\begin{stlog} 
-  \input{simul_y6cl3pr.log.tex}\nullskip
-\end{stlog}
+Same observations apply to the standard errors for class 3.
 
 \begin{stlog} 
   \input{simul_y6cl3pr_se.log.tex}\nullskip
 \end{stlog}
+
+Overall, it seems like the problem of the class indeterminacy
+(permutation of classes) has still been damaging the simulation.
+Further steps would need to be taken to better match the estimated
+classes with their population counterparts.
 
 \newpage
 
