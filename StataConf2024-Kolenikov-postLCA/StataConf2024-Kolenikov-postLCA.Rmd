@@ -272,7 +272,7 @@ zero variances, and other oddities.
 .slide-header[Stata MI : .strong[User-written MI]]
 ### `postlca_class_predpute`
 
-<img src=images/Stata_lca2_predpute.png style="width:947;height:500px;">
+<img src=images/Stata_lca2_predpute.png style="width:585;height:500px;">
 
 ---
 .slide-header[Stata MI : .strong[User-written MI]]
