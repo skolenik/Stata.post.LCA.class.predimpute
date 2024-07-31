@@ -1,0 +1,338 @@
+---
+title: "Imputation of Latent Classes post `gsem`"
+author: "Stas Kolenikov"
+date: "2024-08-02"
+output:
+  xaringan::moon_reader:
+    css: ["styles.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: "%current%"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      dev = "svg") ## export images as SVG
+library(xaringan)
+library(dplyr)
+library(ggplot2)
+library(norctemplates)
+library(conflicted)
+conflicted::conflict_prefer_all("dplyr", quiet=TRUE)
+```
+
+
+
+class: title-slide
+background-image: url(images/cover-1.png)
+background-size: cover
+
+# Imputation of Latent Classes after Latent Class Analysis
+
+<br> 
+<br>  
+#### Hacking Stata MI toolset
+
+
+Stata Conference -- August 2, 2024
+
+Stas Kolenikov, NORC
+
+---
+class: primary, inverse
+background-image: url(images/section-1.png)
+background-size: cover
+
+# Latent Class Analysis  
+
+
+---
+.slide-header[LCA : .strong[Main idea]]
+### Latent Class Analysis: Discrete Random Variable(s) 
+
+.strong[LCA]
+- Discrete latent variable(s)
+    + mixture models (`fmm`) are close relatives appropriate for single outcome
+- Discrete outcomes
+- "Classic" quantitative social sciences: 
+  sophisticated log-linear modeling of the full contingency table
+- Stata implementation: variation of `gsem`
+
+---
+.slide-header[LCA : .strong[Example]]
+### Latent Class Analysis: Example
+
+Three binary variables, $2^3=8$ distinct outcomes, some (secret so far)
+model-based probabilities in the full 3-way table:
+
+```{r pop2, include=FALSE}
+class1 <- c(0.4, 0.6, 0.6)
+class2 <- c(0.8, 0.4, 0.2)
+class_p <- c(0.5, 0.5)
+data.frame(y1 = c(0,1)) %>% cross_join(data.frame(y2 = c(0,1))) %>% cross_join(data.frame(y3 = c(0,1))) %>%
+  mutate(p11 = class1[1]*y1 + (1-class1[1])*(1-y1),
+         p21 = class1[2]*y2 + (1-class1[2])*(1-y2),
+         p31 = class1[3]*y3 + (1-class1[3])*(1-y3),
+         p12 = class2[1]*y1 + (1-class2[1])*(1-y1),
+         p22 = class2[2]*y2 + (1-class2[2])*(1-y2),
+         p32 = class2[3]*y3 + (1-class2[3])*(1-y3),
+         p_1  = p11*p21*p31,
+         p_2  = p12*p22*p32,
+         Prob = p_1*class_p[1] + p_2*class_p[2]
+         ) %>% 
+  mutate(across(starts_with("y"), ~ .x +1, .names="x{.col}")) %>% 
+  rename_with(~ stringr::str_replace_all(.x, "xy", "x"), starts_with("xy")) %>%
+  as_tibble() -> two_class
+set.seed(12345)
+two_class_data <- two_class[sample.int(n=8, size=1000, replace=TRUE, prob=two_class$Prob),c("x1", "x2", "x3")]
+```
+
+```{r show_two_class, include=TRUE, echo=FALSE}
+two_class %>% dplyr::select(y1, y2, y3, Prob) %>% norc_table(option=1)
+```
+
+---
+.slide-header[LCA : .strong[Three-var example]]
+### Latent Class Analysis: Single class solution
+
+One-class solution / marginal probabilities:
+
+$$
+\mathbb{P}[y_1=1]=0.6, \mathbb{P}[y_2=1]=0.5, \mathbb{P}[y_3=1]=0.4
+$$
+Three-way probabilities:
+
+```{r lca1, echo=FALSE}
+lca1 <- c(
+  two_class %>% filter(y1==1) %>% summarize(p1=sum(Prob)) %>% unlist(),
+  two_class %>% filter(y2==1) %>% summarize(p2=sum(Prob)) %>% unlist(),
+  two_class %>% filter(y3==1) %>% summarize(p3=sum(Prob)) %>% unlist()
+)
+
+two_class %>% 
+  mutate(Prob1 =  (y1*lca1["p1"] + (1-y1)*(1-lca1["p1"])) * 
+                  (y2*lca1["p2"] + (1-y2)*(1-lca1["p2"])) * 
+                  (y3*lca1["p3"] + (1-y3)*(1-lca1["p3"]))) -> two_class_lca1
+lambda_1 <- sum((two_class_lca1$Prob - two_class_lca1$Prob1)^2/two_class_lca1$Prob)
+two_class_lca1 %>% select(y1, y2, y3, Prob, Prob1) %>%
+  rename(`Prob(LCA 1)`=Prob1) %>% norc_table(option=1)
+```
+
+Non-centrality: `r format(lambda_1, digits=4)` per observation;
+Pearson $\chi^2(4)$ will reject accordingly.
+
+---
+.slide-header[LCA : .strong[Three-var example]]
+### Latent Class Analysis: Single class solution
+
+<img src=images/Stata_gsem_lca1_run.png style="width:671px;height:500px;">
+
+---
+.slide-header[LCA : .strong[Three-var example]]
+### Latent Class Analysis: Single class solution
+
+<img src=images/Stata_gsem_lca1_estat.png style="width:655px;height:500px;">
+
+---
+.slide-header[LCA : .strong[Three-var example]]
+### Latent Class Analysis: Two class solution
+
+Two-class solution:
+
+$$
+\mathbb{P}[y_1=1|C=1]=0.4, \mathbb{P}[y_2=1|C=1]=0.6, \mathbb{P}[y_3=1|C=1]=0.6
+$$
+$$
+\mathbb{P}[y_1=1|C=2]=0.8, \mathbb{P}[y_2=1|C=2]=0.4, \mathbb{P}[y_3=1|C=2]=0.2
+$$
+$$
+\mathbb{P}[C=1]=0.5, \mathbb{P}[C=2]=0.5
+$$
+
+
+---
+.slide-header[LCA : .strong[Three-var example]]
+### Latent Class Analysis: Two class solution
+
+<img src=images/Stata_gsem_lca2.png style="width:506;height:500px;">
+
+---
+class: primary, inverse
+background-image: url(images/section-1.png)
+background-size: cover
+
+# Class Predictions
+
+
+---
+.slide-header[LCA postestimation : .strong[Class prediction]]
+### What if you want to use classes in subsequent analyses?
+
+- Summarize variables not in the model by class
+- Use classes as predictors in downstream models
+
+.strong[You... don't get them]
+
+- Classes are latent variables: you can never be sure about class membership
+- Any prediction of the class labels is subject to a (prediction) error
+- Subsequent use of single predictions would lead to measurement error biases
+
+---
+.slide-header[LCA postestimation : .strong[Class prediction]]
+### Posterior probablity predictions
+
+You can get $\hat p[C|\mbox{pattern of }y] = \frac{\hat p[y|С] \times \hat p[C]}{\sum_c \hat p[y|c] \times \hat p[c]}$:
+
+<img src=images/Stata_lca2_posterior.png style="width:583;height:460px;">
+
+---
+.slide-header[LCA postestimation : .strong[Class prediction]]
+### What do we do???
+
+Is there a practical solution to the problem of class prediction after LCA?
+
+---
+class: primary, inverse
+background-image: url(images/section-1.png)
+background-size: cover
+
+# Multiple imputation
+
+
+---
+.slide-header[Multiple Imputation : .strong[Big idea]]
+
+## Multiple imputation is the worst missing data method except all others that have been tried 
+
+### (Winston Churchill The Statistician)
+
+---
+.slide-header[Multiple Imputation : .strong[Big idea]]
+### MI algorithm
+
+1. Formulate a multivariate predictive model of the world (including outcomes)
+2. For $m=1, \ldots, M$:
+    1. Obtain estimates $\hat{\beta}$ and standard errors $s(\hat{\beta})$
+    2. Predict from "model + parameter uncertainty" $\hat{\beta} + z \times s(\hat{\beta})$
+    3. Add noise from $y \sim f(y|\hat{\beta} + z \times s(\hat{\beta}))$
+    4. Refit the model until some sort of distribution convergence
+    5. Retain the last set of imputations $Y^{(m)}$
+3. Estimate the model of substantive interest $\theta^{(m)}=g(Y^{(m)})$ for each $m$.
+4. Overall estimate: $\theta_{\rm MI}^{(M)} = \frac1M \sum_{m=1}^M \theta^{(m)}$
+5. Overall variance (Rubin's formula): 
+
+$$
+T=\bar U + (1+1/M) B, \,
+\bar U = \frac{1}{M} \sum_{m=1}^M v^{(m)}\bigl[\theta^{(m)}\bigr]
+$$
+
+$$
+B = \frac{1}{M-1} \sum_{m=1}^M \bigl(\theta^{(m)} - \bar \theta\bigr) \bigl(\theta^{(m)} - \bar \theta\bigr)'
+$$
+
+---
+.slide-header[Multiple Imputation : .strong[Big idea]]
+### Worthwhile references
+
+- Original: [Rubin (1977)](https://doi.org/10.1198/000313004X6355)
+- Review: [after 18+ years Rubin (1996)](https://www.tandfonline.com/doi/abs/10.1080/01621459.1996.10476908)
+- Most practical: van Buuren [FIMD 2nd edn](https://stefvanbuuren.name/fimd) (2018)
+- Stata resources:
+    * [MI manual](https://www.stata.com/manuals/mi.pdf)
+    * SJ MI diagnostics: [Eddings and Marchenko (2012)](https://journals.sagepub.com/doi/10.1177/1536867X1201200301)
+
+
+---
+class: primary, inverse
+background-image: url(images/section-1.png)
+background-size: cover
+
+# Hacking Stata MI engine
+
+
+---
+.slide-header[Stata MI : .strong[Custrom programming]]
+### MI for the people
+
+1. Study MI manual.
+2. Study `help mi_technical`.
+3. Write your custom imputation code (Stas likes `mi set wide`).
+4. Make sure it satisfies `mi` internal standards and expectations: `mi update`.
+5. Cross fingers and run `mi estimate: whatever`.
+
+Turns out there is more: Stata freaks out about omitted entries in `e(b)`,
+zero variances, and other oddities.
+
+---
+.slide-header[Stata MI : .strong[User-written MI]]
+### `postlca_class_predpute`
+
+<img src=images/Stata_lca2_predpute.png style="width:947;height:500px;">
+
+---
+.slide-header[Stata MI : .strong[User-written MI]]
+### `mi estimate`
+
+<img src=images/Stata_lca2_mi_est_mean.png style="width:556;height:500px;">
+
+---
+.slide-header[Stata MI : .strong[User-written MI]]
+### `mi estimate` failures
+
+<img src=images/Stata_lca2_mi_est_fail.png style="width:1066;height:304px;">
+
+Stas' intuition:
+
+- more of a problem with smaller models
+- less of a problem with continuous variables
+
+---
+class: primary, inverse
+background-image: url(images/section-1.png)
+background-size: cover
+
+# More and better work
+
+
+---
+.slide-header[Futher work : .strong[SJ paper]]
+### More comprehensive coverage
+
+.strong[Stata Journal (formatted) paper]
+- More rigorous methodology overview
+- Full documentation of the new command, its options and its use
+- Simulations
+
+https://github.com/skolenik/Stata.post.LCA.class.predimpute
+
+---
+class: primary
+background-image: url(images/questions-1.png)
+background-size: cover
+
+# Questions slide 
+
+
+---
+class: inverse
+background-image: url(images/thankyou-1.png)
+background-size: cover
+
+
+.thankyou[
+
+# Thank you.
+]
+
+
+.contact[
+.strong[Stas Kolenikov]  
+Principal Statistician
+
+kolenikov-stas@norc.org   
+]
