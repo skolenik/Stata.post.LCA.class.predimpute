@@ -64,6 +64,29 @@ background-size: cover
 - Stata implementation: variation of `gsem`
 
 ---
+.slide-header[LCA : .strong[Project motivation]]
+### Latent Class Analysis: Discrete Random Variable(s) 
+
+.strong[Survey of medical residents]
+
+- Outcomes: program outcomes and satisfaction
+- Two classes: happy vs. unhappy
+
+--
+
+- Uhm... maybe three classes, + happy with staff but not the facility?
+
+--
+
+- Uhm... maybe four classes, + happy with technical outcomes but feel isolated?
+
+--
+
+- Downstream analyses:
+  + descriptive analysis of facility variables
+  + classes as predictors in regression models
+
+---
 .slide-header[LCA : .strong[Example]]
 ### Latent Class Analysis: Example
 
@@ -272,13 +295,19 @@ zero variances, and other oddities.
 .slide-header[Stata MI : .strong[User-written MI]]
 ### `postlca_class_predpute`
 
-<img src=images/Stata_lca2_predpute.png style="width:585;height:500px;">
+<img src=images/Stata_lca2_predpute_1000.png style="width:585;height:500px;">
 
 ---
 .slide-header[Stata MI : .strong[User-written MI]]
 ### `mi estimate`
 
-<img src=images/Stata_lca2_mi_est_mean.png style="width:556;height:500px;">
+<img src=images/Stata_lca2_mi_est_mean_1000.png style="width:556;height:500px;">
+
+---
+.slide-header[Stata MI : .strong[User-written MI]]
+### Summary of the missing data impact
+
+<img src=images/Stata_lca2_mi_est_dftable_1000.png style="width:556;height:500px;">
 
 ---
 .slide-header[Stata MI : .strong[User-written MI]]
@@ -288,7 +317,7 @@ zero variances, and other oddities.
 
 Stas' intuition:
 
-- more of a problem with smaller models
+- more of a problem when you have small multi-way cells
 - less of a problem with continuous variables
 
 ---
@@ -309,6 +338,29 @@ background-size: cover
 - Simulations
 
 https://github.com/skolenik/Stata.post.LCA.class.predimpute
+
+---
+
+.slide-header[Futher work : .strong[SJ paper]]
+### Quasi-real example
+
+<img src=images/Stata_nhanes_lca2.png>
+
+---
+
+.slide-header[Futher work : .strong[SJ paper]]
+### Quasi-real example
+
+<img src=images/Stata_nhanes_predpute.png>
+
+
+---
+
+.slide-header[Futher work : .strong[SJ paper]]
+### Quasi-real example
+
+<img src=images/Stata_nhanes_dftable.png style="width:605;height:500px;">
+
 
 ---
 class: primary

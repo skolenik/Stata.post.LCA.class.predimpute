@@ -23,14 +23,26 @@ predict post_1, classposterior class(1)
 predict post_2, classposterior class(2)
 list, sep(0) 
 
-postlca_class_predpute, lcimpute(lclass) addm(50) seed(20103)
+// postlca_class_predpute, lcimpute(lclass) addm(50) seed(20103)
+
+expand Prob*1000
+postlca_class_predpute, lcimpute(lclass) addm(50) seed(97054)
 mi describe
 
-local safelist 1 3 4 5 7 12 14 15 18 21 22 25 26 28 29 30 32 35 40 42 46 48 49 50
+mi estimate: mean y* , over(lclass)
 
-mi estimate, imp(`safelist'): mean y* [fw=Prob*1000], over(lclass)
+// earlier: imputation on the 8 observations directly, went badly
+
+mi xeq 1/50: mean y* , over(lclass)
 
 cap noi mi estimate: mean y* [fw=Prob*1000], over(lclass)
 cap noi mi estimate: reg y1 i.lclass
 
+webuse nhanes2.dta, clear
+qui svy , subpop(if hlthstat<8) : gsem (heartatk diabetes highbp <-, logit) ///
+	(hlthstat <-, ologit) , lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
+est tab . , keep(highbp:1.C highbp:2.C heartatk:1.C heartatk:2.C)
+	
+postlca_class_predpute, lcimpute(lclass) addm(62) seed(9752)
+mi estimate , dftable : prop race, over(lclass) 
 
