@@ -31,7 +31,7 @@ in main effects:
 
 \begin{equation}
   \label{eq:loglinear:main}
-  \Expect \log n_{{k_1}{k_2}\ldots{k_p}} = 
+  \log \Expect n_{{k_1}{k_2}\ldots{k_p}} = 
   \mathrm{offset} + 
   \sum_{j=1}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
 \end{equation}
@@ -44,20 +44,24 @@ likelihood, as equation (\ref{eq:loglinear:main}) is a Poisson regression model.
 This model can be denoted as $X_1 + X_2 + \ldots + X_p$ main effects model.
 The fit of the model is assessed by the Pearson $\chi^2$ test comparing the
 expected vs. observed cell counts, or the likelihood ratio test against a saturated
-model where each cell has its own coefficient. If the model were to be found inadequate,
+model where each cell in the full $p$-dimensional table
+has its own coefficient. If the main effects model were to be found inadequate,
 the researcher can entertain adding interactions, e.g. the interaction of 
 $X_1$ and $X_2$ would have $m_1 \times m_2$ terms for each pair of values 
-of these variables, rather than $m_1 + m_2$ main effects:
+of these variables, rather than $m_1 + m_2$ main effects, as well as 
+remaining $p-2$ variables in their main effects form:
 
 \begin{equation}
   \label{eq:loglinear:x1x2}
-  \Expect \log n_{{k_1}{k_2}\ldots{k_p}} = 
+  \log \Expect n_{{k_1}{k_2}\ldots{k_p}} = 
   \mathrm{offset} + 
   \sum_{k_1=1}^{m_1} \sum_{k_2=1}^{m_2} \beta_{12,k_1k_2} +
   \sum_{j=3}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
 \end{equation}
 
-This model can be denoted as $X_1 \# X_2 + X_3 + \ldots + X_p$.
+This model, in the notation that is closer to Stata interaction terms
+than the traditional exposition of LCA, 
+can be denoted as $X_1 \# X_2 + X_3 + \ldots + X_p$.
 
 In the loglinear model notation, the latent class models 
 are models of the form $C \# (X_1 + X_2 + \ldots + X_p)$.
@@ -75,8 +79,10 @@ Further extensions of latent class analysis may include:
       of the population totals in cells);
   \item Constrained analyses with structural zeroes or ones 
       (e.g. that every member of class $C=1$ must have the value
-      $X_1=1$);
-  \item Constrained analyses where some variables have identical
+      $X_1=1$, expressed as the corresponding coefficient 
+      $\beta_{11\cdot}=-\infty$ for all categories except 1);
+  \item Constrained analyses (measurement invariance) where some 
+      variables or interations have identical
       coefficients across classes.
 \end{enumerate}
 
@@ -86,7 +92,7 @@ Official Stata \stcmd{gsem, lclass()} implements
 the \textit{main effects} LCA. The syntax is that of the SEM
 families, with the variables that the arrow points to
 interpreted as the outcome variables, and the latent class
-variable being the source of the arrow:
+variable considered the source of the arrow:
 
 \begin{stlog}
 . webuse gsem_lca1
@@ -100,7 +106,9 @@ the complex survey data analysis.)
 
 As LCA is implemented through \stcmd{gsem},
 all the link functions and generalized linear model families
-are supported, extending the ``mainstream'' LCA.
+are supported, extending the ``mainstream'' LCA to include
+multinomial and ordinal variables. (When all outcomes are continuous,
+the model is referred to as \textit{profile analysis}.)
 
 \subsection{Examples }
 
@@ -162,7 +170,7 @@ This is achieved through the mechanics of multiple imputation
 \citep{vanbuuren:2018:fimd2}. 
 The name is supposed to convey that
 \begin{enumerate}
-  \item it is supposed to be run after LCA as a post-estimation command;
+  \item it is run after LCA as a post-estimation command;
   \item it predicts / imputes the latent classes.
 \end{enumerate}
 
@@ -170,16 +178,12 @@ The name is supposed to convey that
 
 Imputation of latent classes, a \stcmd{gsem} postestimation command:
 
-\begin{stverbatim}
-\begin{verbatim}
 \begin{stsyntax}
     postlca\_class\_predpute,
     lcimpute(\varname)
     addm(\num)
     \optional{ seed(\num) }
 \end{stsyntax}
-\end{verbatim}
-\end{stverbatim}
 
 \hangpara{
   \stcmd{lcimpute(}\varname\stcmd{)} 
@@ -202,14 +206,16 @@ Imputation of latent classes, a \stcmd{gsem} postestimation command:
 
 The LCA capabilities of Stata are exemplified in [SEM] \textbf{Example 50g}:
 
+\noindent
 \begin{stlog}
 \input{example_lca1_edited.log.tex}\nullskip
 \end{stlog}
 
-One of the official post-estimation commands available after
-\stcmd{gsem, lclass()} is the computation of the class-specific means
-of the outcome variables:
+The official post-estimation commands available after
+\stcmd{gsem, lclass()} produce the estimated class probabilities
+and class-specific means of the outcome variables used in the model:
 
+\noindent
 \begin{stlog}
 \input{example_lca1_lcamean.log.tex}\nullskip
 \end{stlog}
@@ -234,7 +240,9 @@ In the above output, the fraction of missing data (FMI)
 is 33\% to 40\%, and the relative variance increase (RVI) is the similar range 
 from 39\% to 45\%. This means that the analysis with the deterministic
 (modal) imputation of the classes would have had standard errors 
-that are about 20\% too small.
+that are about 20\% too small. (In fact, the model has a structural zero,
+and modal imputation struggles to produce any standard errors around
+the estimate, at all.)
 
 \begin{stlog}
 \input{example_lca1_modal.log.tex}\nullskip
@@ -244,7 +252,8 @@ that are about 20\% too small.
 \subsection{NHANES complex survey data example}
 
 In many important and realistic applications of LCA, including the case
-that necessitated the development of this package, the data come from
+that necessitated the development of this package
+\citep{rowan:etal:2024}, the data come from
 complex survey designs that require setting the data up for the appropriate
 survey-design adjusted analyses. See \svyref{svyset}, \miref{mi svyset},
 and \citet{kolenikov:pitblado:2014}.
@@ -264,20 +273,23 @@ This analysis approximates breaking down the population
 into "generally healthy" and "unhealthy" groups, as e.g.
 the gradient of \textit{hlthstat} variable between the classes
 shows. The official \stcmd{gsem postestimation} commands
-take approximately forever to run (there is underlying
-\stcmd{margins} implementation with iterations over 
-the numeric derivatives step size used to compute the stadnard errors).
-There is an interaction of \stcmd{svy} and \stcmd{gsem} in that
-\stcmd{svy} forces its own starting values that happen to be 
-infeasible for LCA, hence the need to specify the initial random search.
+take approximately forever to run.
+Some complicated interaction of \stcmd{svy} and \stcmd{gsem} 
+made the default starting infeasible, 
+hence I had to specify the initial random search.
 The use of the \stcmd{postlca\_class\_predpute} command
-makes it possible to run the analylsis much faster,
+makes it possible to run the analylsis much faster
+(although that has never been the intent of the package),
 and to conduct complementary analyses,
-e.g. analysis of the racial composition of the two classes.
+e.g. analysis of the racial composition of the two classes
+using a variable that it outside of the model.
 
 \begin{stlog}
 \input{example_nhanes2_predpute.log}\nullskip
 \end{stlog}
+
+The less healthy class has a higher concentration
+of ethnic minorities.
 
 \subsection{Choosing the number of imputations}
 
@@ -297,7 +309,8 @@ the smaller ``poor health'' class have about 50 degrees of freedom:
 The public use version of the NHANES II data uses the approximate
 design that has 62 PSU in 31 strata, resulting in 31 design degrees 
 of freedom. The imputation degrees of freedom barely exceed that.
-Let us push the number of imputations up:
+Let us push the number of imputations up (I used $M=62$ to match
+the number of PSUs):
 
 \begin{stlog}
 \input{example_nhanes2_dftable62.log}\nullskip
@@ -325,6 +338,8 @@ they
 
 Then a chosen value of $M$ can be used for all analyses in the paper.
 
+An additional consideration for the choice of the number of imputations
+is ensuring diversity of the simulated classes.
 Even a large number of replications may not protect the researcher
 from classes that may have structural zeroes. These produce
 zero standard errors and missing degrees of freedom and 
@@ -338,7 +353,7 @@ variance increase statistics:
 
 So how much of a problem is the modal imputation of the latent classes?
 I ran a small simulation to investigate. Samples were taken from
-a model with the classes, five binary indicators and one additional 
+a model with three classes, five binary indicators and one additional 
 continuous variable not used in the model as follows:
 
 \begin{tabular}{l|ccc}
@@ -402,7 +417,8 @@ outlines the possible options:
     this did not work out well as it resulted in convergence issues:
     it has been pushing the model into areas of the parameter space
     where the likelihood was too flat to climb out of.
-  \item The resulting simulation specification I used was a combination
+  \item The resulting simulation specification I used in the simulation
+    was a combination
     of \stcmd{from(b0) startvalues(jitter 0.1, draws(10))}. 
     The value of the starting matrix \stcmd{b0} was obtained
     from a sample of size $10^6$ computed once outside of the simulation.
@@ -412,9 +428,17 @@ outlines the possible options:
 
 The second complication of the simulation was that in some runs,
 the \stcmd{mi estimate} calls with imputed classes were returning 
-errors. This may be a risk of a third-party written imputation routine.
-The author will investigate this with Stata Corp developers as this
-article progresses.
+errors. 
+There may be some minor incompatibilities 
+between this third-party implementation of multiple imputation,
+and the expectations of \stcmd{mi estimate}. Also, the discrete
+nature of the imputed data may have played a role.
+(The specific error message stated that an imputation had missing
+data, and/or that sample sizes varied between imputations,
+although visual inspection of the offending simulation runs 
+showed this was not the case;
+this may have been a somewhat generic error message produced by
+the \stcmd{mi} engine when it encountered something unusual.)
 
 \begin{stlog}
   \input{simul_failures.log.tex}\nullskip
@@ -520,7 +544,7 @@ classes with their population counterparts.
 % \input stata.tex
 
 \bibliographystyle{sj}
-\bibliography{sj}
+\bibliography{post-lca}
 
 \begin{aboutauthors}
 Stas Kolenikov is Principal Statistician at NORC who has been
