@@ -1,0 +1,740 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  D:\home\stephenj\MYDocs\REF\_Stata_Journal_editor\kolenikov_infere
+> nce-imputed-latent-classes\2025.03.04.kolenikov_submission\postlca-examples_s
+> pj.log
+  log type:  text
+ opened on:   8 Jun 2025, 11:40:43
+
+. 
+. ***** SPJ version *******
+. 
+. pwd
+D:\home\stephenj\MYDocs\REF\_Stata_Journal_editor\kolenikov_inference-imputed-l
+> atent-classes\2025.03.04.kolenikov_submission
+
+. dir 
+  <dir>   6/08/25 11:40  .                 
+  <dir>   6/08/25 11:08  ..                
+ 390.6k  12/10/24 19:56  postlca-class-predpute.pdf
+   2.3k   7/23/24 19:26  postlca-examples.do
+   2.6k   6/08/25 11:40  postlca-examples_spj.do
+   0.0k   6/08/25 11:40  postlca-examples_spj.log
+   2.2k   7/30/24 16:08  postlca-simul-analyze.do
+   2.4k   6/08/25 11:40  postlca-simul-analyze_spj.do
+   6.9k   7/26/24 14:36  postlca-simul.do  
+   7.1k   6/08/25 11:40  postlca-simul_spj.do
+  31.8k   6/08/25 11:40  postlca-simul_spj.log
+   3.3k   7/24/24 17:10  postlca_class_predpute.ado
+   3.0k   6/05/24 18:53  postlca_class_predpute.sthlp
+   2.8k   7/30/24 15:47  postlca_class_recode.ado
+   1.1k   3/04/25 13:54  readme.txt        
+   2.6k   6/08/25 11:29  ~postlca-examples_spj.do.stswp
+   2.4k   6/08/25 11:30  ~postlca-simul-analyze_spj.do.stswp
+   7.1k   6/08/25 11:30  ~postlca-simul_spj.do.stswp
+
+. 
+. 
+. * sjlog using example_lca1, replace
+. frame change default
+
+. cap frame gsem_lca1: clear
+
+. cap frame drop gsem_lca1 
+
+. frame create gsem_lca1
+
+. frame change gsem_lca1
+
+. 
+. webuse gsem_lca1.dta, clear
+(Latent class analysis)
+
+. describe
+
+Contains data from https://www.stata-press.com/data/r19/gsem_lca1.dta
+ Observations:           216                  Latent class analysis
+    Variables:             4                  17 Jan 2025 12:52
+                                              (_dta has notes)
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+accident        byte    %9.0g                 Would testify against friend in
+                                                accident case
+play            byte    %9.0g                 Would give negative review of
+                                                friend's play
+insurance       byte    %9.0g                 Would disclose health concerns to
+                                                friend's insurance company
+stock           byte    %9.0g                 Would keep company secret from
+                                                friend
+-------------------------------------------------------------------------------
+Sorted by: accident  play  insurance  stock
+
+. gsem (accident play insurance stock <-), logit lclass(C 2)
+
+Fitting class model:
+
+Iteration 0:  (class) log likelihood = -149.71979  
+Iteration 1:  (class) log likelihood = -149.71979  
+
+Fitting outcome model:
+
+Iteration 0:  (outcome) log likelihood = -403.97142  
+Iteration 1:  (outcome) log likelihood = -398.15909  
+Iteration 2:  (outcome) log likelihood = -397.81953  
+Iteration 3:  (outcome) log likelihood =  -397.8164  
+Iteration 4:  (outcome) log likelihood =  -397.8164  
+
+Refining starting values:
+
+Iteration 0:  (EM) log likelihood = -570.24204
+Iteration 1:  (EM) log likelihood = -576.20485
+Iteration 2:  (EM) log likelihood = -577.41464
+Iteration 3:  (EM) log likelihood = -576.88554
+Iteration 4:  (EM) log likelihood = -575.59242
+Iteration 5:  (EM) log likelihood = -573.90567
+Iteration 6:  (EM) log likelihood = -571.99868
+Iteration 7:  (EM) log likelihood = -569.97482
+Iteration 8:  (EM) log likelihood = -567.90955
+Iteration 9:  (EM) log likelihood = -565.86392
+Iteration 10: (EM) log likelihood = -563.88815
+Iteration 11: (EM) log likelihood = -562.02165
+Iteration 12: (EM) log likelihood = -560.29231
+Iteration 13: (EM) log likelihood = -558.71641
+Iteration 14: (EM) log likelihood = -557.29974
+Iteration 15: (EM) log likelihood = -556.03949
+Iteration 16: (EM) log likelihood = -554.92679
+Iteration 17: (EM) log likelihood = -553.94914
+Iteration 18: (EM) log likelihood = -553.09241
+Iteration 19: (EM) log likelihood = -552.34233
+Iteration 20: (EM) log likelihood = -551.68539
+note: EM algorithm reached maximum iterations.
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -504.62913  
+Iteration 1:  Log likelihood = -504.47255  
+Iteration 2:  Log likelihood = -504.46773  
+Iteration 3:  Log likelihood = -504.46767  
+Iteration 4:  Log likelihood = -504.46767  
+
+Generalized structural equation model                      Number of obs = 216
+Log likelihood = -504.46767
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+1.C          |  (base outcome)
+-------------+----------------------------------------------------------------
+2.C          |
+       _cons |  -.9482041   .2886333    -3.29   0.001    -1.513915   -.3824933
+------------------------------------------------------------------------------
+
+Class:    1        
+
+Response: accident 
+Family:   Bernoulli
+Link:     Logit    
+
+Response: play     
+Family:   Bernoulli
+Link:     Logit    
+
+Response: insurance
+Family:   Bernoulli
+Link:     Logit    
+
+Response: stock    
+Family:   Bernoulli
+Link:     Logit    
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+accident     |
+       _cons |   .9128742   .1974695     4.62   0.000     .5258411    1.299907
+-------------+----------------------------------------------------------------
+play         |
+       _cons |  -.7099072   .2249096    -3.16   0.002    -1.150722   -.2690926
+-------------+----------------------------------------------------------------
+insurance    |
+       _cons |  -.6014307   .2123096    -2.83   0.005     -1.01755   -.1853115
+-------------+----------------------------------------------------------------
+stock        |
+       _cons |  -1.880142   .3337665    -5.63   0.000    -2.534312   -1.225972
+------------------------------------------------------------------------------
+
+Class:    2        
+
+Response: accident 
+Family:   Bernoulli
+Link:     Logit    
+
+Response: play     
+Family:   Bernoulli
+Link:     Logit    
+
+Response: insurance
+Family:   Bernoulli
+Link:     Logit    
+
+Response: stock    
+Family:   Bernoulli
+Link:     Logit    
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+accident     |
+       _cons |   4.983017   3.745987     1.33   0.183    -2.358982    12.32502
+-------------+----------------------------------------------------------------
+play         |
+       _cons |   2.747366   1.165853     2.36   0.018     .4623372    5.032395
+-------------+----------------------------------------------------------------
+insurance    |
+       _cons |   2.534582   .9644841     2.63   0.009     .6442279    4.424936
+-------------+----------------------------------------------------------------
+stock        |
+       _cons |   1.203416   .5361735     2.24   0.025     .1525356    2.254297
+------------------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using example_lca1_lcamean, replace
+. set rmsg on
+r; t=0.00 11:41:16
+
+. estat lcprob
+
+Latent class marginal probabilities                        Number of obs = 216
+
+--------------------------------------------------------------
+             |            Delta-method
+             |     Margin   std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+           C |
+          1  |   .7207539   .0580926      .5944743    .8196407
+          2  |   .2792461   .0580926      .1803593    .4055257
+--------------------------------------------------------------
+r; t=4.37 11:41:20
+
+. estat lcmean
+
+Latent class marginal means                                Number of obs = 216
+
+--------------------------------------------------------------
+             |            Delta-method
+             |     Margin   std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+1            |
+    accident |   .7135879   .0403588      .6285126    .7858194
+        play |   .3296193   .0496984      .2403573    .4331299
+   insurance |   .3540164   .0485528      .2655049    .4538042
+       stock |   .1323726   .0383331      .0734875    .2268872
+-------------+------------------------------------------------
+2            |
+    accident |   .9931933   .0253243      .0863544    .9999956
+        play |   .9397644   .0659957      .6135685    .9935191
+   insurance |   .9265309   .0656538      .6557086    .9881667
+       stock |    .769132   .0952072      .5380601    .9050206
+--------------------------------------------------------------
+r; t=8.49 11:41:28
+
+. set rmsg off
+
+. * sjlog close, replace
+. 
+. * sjlog using example_lca1_predpute, replace
+. set rmsg on
+r; t=0.00 11:41:28
+
+. postlca_class_predpute, lcimpute(lclass) addm(10) seed(12345)
+(216 missing values generated)
+(10 imputations added; M = 10)
+r; t=0.20 11:41:29
+
+. mi estimate : prop lclass
+
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =        216
+                                  Average RVI     =     0.4594
+                                  Largest FMI     =     0.3319
+                                  Complete DF     =        215
+DF adjustment:   Small sample     DF:     min     =      55.99
+                                          avg     =      55.99
+Within VCE type:     Analytic             max     =      55.99
+
+--------------------------------------------------------------
+             |                                   Normal
+             | Proportion   Std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+      lclass |
+          1  |   .7236111   .0367281      .6500355    .7971867
+          2  |   .2763889   .0367281      .2028133    .3499645
+--------------------------------------------------------------
+r; t=4.53 11:41:33
+
+. mi estimate : mean accident, over(lclass)
+
+Multiple-imputation estimates     Imputations     =         10
+Mean estimation                   Number of obs   =        216
+                                  Average RVI     =     0.3882
+                                  Largest FMI     =     0.4485
+                                  Complete DF     =        215
+DF adjustment:   Small sample     DF:     min     =      35.59
+                                          avg     =     116.62
+Within VCE type:     Analytic             max     =     197.64
+
+-------------------------------------------------------------------
+                  |       Mean   Std. err.     [95% conf. interval]
+------------------+------------------------------------------------
+c.accident@lclass |
+               1  |   .7144964   .0369935      .6415438    .7874491
+               2  |   .9934973   .0135709      .9659633    1.021031
+-------------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+r; t=1.20 11:41:34
+
+. set rmsg off
+
+. * sjlog close, replace
+. 
+. * sjlog using example_lca1_modal, replace
+. webuse gsem_lca1.dta, clear
+(Latent class analysis)
+
+. quietly gsem (accident play insurance stock <-), logit lclass(C 2)
+
+. predict post_1, class(1) classposterior
+
+. gen byte lclass_modal = 2 - (post_1 > 0.50)
+
+. mean post_1 lclass_modal
+
+Mean estimation                            Number of obs = 216
+
+--------------------------------------------------------------
+             |       Mean   Std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+      post_1 |   .7207539   .0257112      .6700756    .7714321
+lclass_modal |   1.328704   .0320361      1.265559    1.391849
+--------------------------------------------------------------
+
+. mean accident, over(lclass_modal)
+
+Mean estimation                                       Number of obs = 216
+
+-------------------------------------------------------------------------
+                        |       Mean   Std. err.     [95% conf. interval]
+------------------------+------------------------------------------------
+c.accident@lclass_modal |
+                     1  |   .6896552   .0385529      .6136651    .7656452
+                     2  |          1          0             .           .
+-------------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using nhanes2, replace
+. frame change default
+
+. cap frame nhanes2: clear
+
+. cap frame drop nhanes2
+
+. frame create nhanes2
+
+. frame change nhanes2
+
+. 
+. webuse nhanes2.dta, clear
+
+. svyset
+
+Sampling weights: finalwgt
+             VCE: linearized
+     Single unit: missing
+        Strata 1: strata
+ Sampling unit 1: psu
+           FPC 1: <zero>
+
+. svy , subpop(if hlthstat<8) : ///
+>         gsem ///
+>                 (heartatk diabetes highbp <-, logit) ///
+>                 (hlthstat <-, ologit) /// 
+>         , lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
+(running gsem on estimation sample)
+
+Survey: Generalized structural equation model
+
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Subpop. no. obs =      10,335
+                                                 Subpop. size    = 116,997,257
+                                                 Design df       =          31
+
+------------------------------------------------------------------------------
+             |             Linearized
+             | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+1.C          |  (base outcome)
+-------------+----------------------------------------------------------------
+2.C          |
+       _cons |   1.330043   .1259401    10.56   0.000     1.073186    1.586899
+------------------------------------------------------------------------------
+
+Class:    1        
+
+Response: heartatk                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: diabetes                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: highbp                                        Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: hlthstat                                      Number of obs = 10,335
+Family:   Ordinal  
+Link:     Logit    
+
+------------------------------------------------------------------------------
+             |             Linearized
+             | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+heartatk     |
+       _cons |  -1.874967   .1150791   -16.29   0.000    -2.109672   -1.640261
+-------------+----------------------------------------------------------------
+diabetes     |
+       _cons |  -1.785271   .0805057   -22.18   0.000    -1.949463   -1.621078
+-------------+----------------------------------------------------------------
+highbp       |
+       _cons |   .4244921    .076861     5.52   0.000     .2677332    .5812511
+-------------+----------------------------------------------------------------
+/hlthstat    |
+        cut1 |  -3.659014   .8903346                     -5.474863   -1.843165
+        cut2 |  -2.272516   .4402984                      -3.17051   -1.374521
+        cut3 |  -.2566588   .2032721                      -.671235    .1579173
+        cut4 |   1.229244   .1951641                      .8312038    1.627283
+------------------------------------------------------------------------------
+
+Class:    2        
+
+Response: heartatk                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: diabetes                                      Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: highbp                                        Number of obs = 10,335
+Family:   Bernoulli
+Link:     Logit    
+
+Response: hlthstat                                      Number of obs = 10,335
+Family:   Ordinal  
+Link:     Logit    
+
+------------------------------------------------------------------------------
+             |             Linearized
+             | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+heartatk     |
+       _cons |  -6.081307   .6280801    -9.68   0.000    -7.362285   -4.800329
+-------------+----------------------------------------------------------------
+diabetes     |
+       _cons |  -5.223215   .6044468    -8.64   0.000    -6.455993   -3.990438
+-------------+----------------------------------------------------------------
+highbp       |
+       _cons |  -.8166105   .0750027   -10.89   0.000    -.9695795   -.6636415
+-------------+----------------------------------------------------------------
+/hlthstat    |
+        cut1 |   -.657824   .0483113                     -.7563555   -.5592926
+        cut2 |   .7123144   .0649814                      .5797839    .8448448
+        cut3 |   2.647239   .1192958                      2.403934    2.890544
+        cut4 |    24.6439    14.1421                       -4.1991     53.4869
+------------------------------------------------------------------------------
+
+. set rmsg on     
+r; t=0.00 11:41:57
+
+. estat lcprob
+
+Latent class marginal probabilities
+
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Design df       =          31
+
+--------------------------------------------------------------
+             |            Delta-method
+             |     Margin   std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+           C |
+          1  |   .2091523   .0208315      .1698206    .2547976
+          2  |   .7908477   .0208315      .7452024    .8301794
+--------------------------------------------------------------
+r; t=14.41 11:42:12
+
+. estat lcmean
+
+Latent class marginal means
+
+Number of strata = 31                            Number of obs   =      10,351
+Number of PSUs   = 62                            Population size = 117,157,513
+                                                 Design df       =          31
+
+--------------------------------------------------------------
+             |            Delta-method
+             |     Margin   std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+1            |
+    heartatk |   .1329681   .0132672      .1081603    .1624295
+    diabetes |   .1436535   .0099036      .1246119    .1650562
+      highbp |   .6045577    .018375      .5665363    .6413552
+             |
+    hlthstat |
+  Excellent  |   .0251111   .0217959      .0041733    .1366775
+  Very good  |   .0683138    .021455      .0355579     .127263
+       Good  |   .3427603   .0254834      .2928195    .3964437
+       Fair  |   .3375009   .0210993      .2958981    .3817814
+       Poor  |   .2263139   .0341724      .1642029    .3033906
+-------------+------------------------------------------------
+2            |
+    heartatk |     .00228   .0014287      .0006343    .0081599
+    diabetes |   .0053611   .0032231      .0015686    .0181559
+      highbp |   .3064836   .0159419      .2749643    .3399221
+             |
+    hlthstat |
+  Excellent  |   .3412286     .01086       .319438    .3637112
+  Very good  |   .3296838   .0082507      .3130796     .346724
+       Good  |   .2629283   .0094265      .2441597    .2826002
+       Fair  |   .0661594   .0073704       .052623    .0828732
+       Poor  |   1.98e-11   2.81e-10      5.68e-24    .9857587
+--------------------------------------------------------------
+r; t=116.92 11:44:09
+
+. set rmsg off    
+
+. * sjlog close, replace
+. 
+. * sjlog using example_nhanes2_predpute, replace
+. set rmsg on
+r; t=0.00 11:44:09
+
+. postlca_class_predpute, lcimpute(lclass) addm(10) seed(5678)
+(10,351 missing values generated)
+(10 imputations added; M = 10)
+
+Sampling weights: finalwgt
+             VCE: linearized
+     Single unit: missing
+        Strata 1: strata
+ Sampling unit 1: psu
+           FPC 1: <zero>
+r; t=0.49 11:44:09
+
+. mi estimate : prop lclass
+
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.5318
+                                  Largest FMI     =     0.3641
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =      73.85
+                                          avg     =      73.85
+Within VCE type:     Analytic             max     =      73.85
+
+--------------------------------------------------------------
+             |                                   Normal
+             | Proportion   Std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+      lclass |
+          1  |   .2675394   .0053851       .256809    .2782698
+          2  |   .7324606   .0053851      .7217302     .743191
+--------------------------------------------------------------
+r; t=1.40 11:44:11
+
+. mi estimate : prop hlthstat if hlthstat < 8, over(lclass)
+
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =      36.31
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+
+-----------------------------------------------------------------
+                |                                   Normal
+                | Proportion   Std. err.     [95% conf. interval]
+----------------+------------------------------------------------
+hlthstat@lclass |
+   Excellent 1  |   .0196036   .0034636      .0126501    .0265572
+   Excellent 2  |   .3104144   .0055292      .2995676    .3212613
+   Very good 1  |   .0550625   .0061217      .0426506    .0674743
+   Very good 2  |   .3217978   .0056545      .3106989    .3328966
+        Good 1  |   .2971359   .0106787      .2758813    .3183905
+        Good 2  |   .2795891   .0056354      .2685025    .2906756
+        Fair 1  |   .3635286   .0106978      .3423564    .3847008
+        Fair 2  |   .0881987    .003944      .0803607    .0960367
+        Poor 1  |   .2646694   .0089821      .2470257     .282313
+        Poor 2  |          0  (no observations)
+-----------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+r; t=1.66 11:44:12
+
+. mi estimate : prop race, over(lclass)
+
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.1714
+                                  Largest FMI     =     0.2665
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =     135.06
+                                          avg     =     511.63
+Within VCE type:     Analytic             max     =   1,646.09
+
+--------------------------------------------------------------
+             |                                   Normal
+             | Proportion   Std. err.     [95% conf. interval]
+-------------+------------------------------------------------
+ race@lclass |
+    White 1  |   .8373303    .007846      .8218662    .8527944
+    White 2  |   .8898021   .0038411      .8822573     .897347
+    Black 1  |    .146533   .0077902      .1311263    .1619396
+    Black 2  |   .0897149    .003599      .0826331    .0967967
+    Other 1  |   .0161367   .0026831      .0108476    .0214259
+    Other 2  |    .020483   .0016844      .0171791    .0237869
+--------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+r; t=1.60 11:44:14
+
+. set rmsg off
+
+. * sjlog close, replace
+. 
+. 
+. * sjlog using example_nhanes2_dftable10, replace
+. mi estimate , dftable : prop race, over(lclass) 
+
+Multiple-imputation estimates     Imputations     =         10
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.1714
+                                  Largest FMI     =     0.2665
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =     135.06
+                                          avg     =     511.63
+Within VCE type:     Analytic             max     =   1,646.09
+
+--------------------------------------------------------------
+             |                                          Normal
+             | Proportion   Std. err.           df   std. err.
+-------------+------------------------------------------------
+ race@lclass |
+    White 1  |   .8373303    .007846         216.9       11.87
+    White 2  |   .8898021   .0038411         554.6        6.81
+    Black 1  |    .146533   .0077902         135.1       15.92
+    Black 2  |   .0897149    .003599         306.1        9.66
+    Other 1  |   .0161367   .0026831         211.0       12.07
+    Other 2  |    .020483   .0016844        1646.1        3.55
+--------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+
+. * sjlog close, replace
+. 
+. * sjlog using example_nhanes2_dftable62, replace
+. webuse nhanes2.dta, clear
+
+. qui svy , subpop(if hlthstat<8) : ///
+>         gsem ///
+>                 (heartatk diabetes highbp <-, logit) ///
+>                 (hlthstat <-, ologit) /// 
+>         , lclass(C 2) nolog  startvalues(randomid, draws(5) seed(101)) 
+
+. postlca_class_predpute, lcimpute(lclass) addm(62) seed(9752)
+(10,351 missing values generated)
+(62 imputations added; M = 62)
+
+Sampling weights: finalwgt
+             VCE: linearized
+     Single unit: missing
+        Strata 1: strata
+ Sampling unit 1: psu
+           FPC 1: <zero>
+
+. mi estimate , dftable : prop race, over(lclass) 
+
+Multiple-imputation estimates     Imputations     =         62
+Proportion estimation             Number of obs   =     10,351
+                                  Average RVI     =     0.2755
+                                  Largest FMI     =     0.3374
+                                  Complete DF     =      10350
+DF adjustment:   Small sample     DF:     min     =     504.00
+                                          avg     =   1,603.49
+Within VCE type:     Analytic             max     =   2,442.08
+
+--------------------------------------------------------------
+             |                                          Normal
+             | Proportion   Std. err.           df   std. err.
+-------------+------------------------------------------------
+ race@lclass |
+    White 1  |   .8379406   .0080288         922.6       14.82
+    White 2  |    .889631   .0038839        2292.4        7.87
+    Black 1  |   .1445581   .0075479        1103.5       13.12
+    Black 2  |   .0903802    .003542        2442.1        7.51
+    Other 1  |   .0175013   .0030507         504.0       22.62
+    Other 2  |   .0199888   .0017322        2356.4        7.71
+--------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+
+. * sjlog close, replace
+. 
+. * sjlog using example_nhanes2_dftable62gh, replace
+. mi estimate , dftable : prop hlthstat if hlthstat < 8, over(lclass) 
+
+Multiple-imputation estimates     Imputations     =         62
+Proportion estimation             Number of obs   =     10,335
+                                  Average RVI     =          .
+                                  Largest FMI     =          .
+                                  Complete DF     =      10334
+DF adjustment:   Small sample     DF:     min     =     234.37
+                                          avg     =          .
+Within VCE type:     Analytic             max     =          .
+
+-----------------------------------------------------------------
+                |                                          Normal
+                | Proportion   Std. err.           df   std. err.
+----------------+------------------------------------------------
+hlthstat@lclass |
+   Excellent 1  |   .0183993   .0033919         309.7       32.68
+   Excellent 2  |   .3111818   .0054853        6242.4        3.09
+   Very good 1  |   .0573944   .0062471         234.4       41.21
+   Very good 2  |   .3212476   .0056361        4001.1        5.03
+        Good 1  |   .2947403   .0104573         575.3       20.57
+        Good 2  |   .2804536   .0055871        2155.5        8.23
+        Fair 1  |   .3656239    .010418        1033.8       13.71
+        Fair 2  |    .087117     .00393         549.1       21.27
+        Poor 1  |   .2638421   .0087535        4603.6        4.40
+        Poor 2  |          0  (no observations)
+-----------------------------------------------------------------
+Note: Numbers of observations in e(_N) vary among imputations.
+
+. * sjlog close, replace
+. 
+. * exit
+. 
+. **********
+. log close
+      name:  <unnamed>
+       log:  D:\home\stephenj\MYDocs\REF\_Stata_Journal_editor\kolenikov_infere
+> nce-imputed-latent-classes\2025.03.04.kolenikov_submission\postlca-examples_s
+> pj.log
+  log type:  text
+ closed on:   8 Jun 2025, 11:44:41
+-------------------------------------------------------------------------------

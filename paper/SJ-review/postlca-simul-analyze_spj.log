@@ -1,0 +1,351 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  D:\home\stephenj\MYDocs\REF\_Stata_Journal_editor\kolenikov_infere
+> nce-imputed-latent-classes\2025.03.04.kolenikov_submission\postlca-simul-anal
+> yze_spj.log
+  log type:  text
+ opened on:   8 Jun 2025, 12:08:00
+
+. 
+. ***** SPJ version *******
+. 
+. 
+. * read all the simulation files
+. frame change default
+
+. cap frame simul_results: drop _all
+
+. cap frame drop simul_results
+
+. frame create simul_results
+
+. frame change simul_results
+
+. 
+
+. use postlca-simul-50.dta
+
+. 
+. * sjlog using simul_failures, replace
+. tabulate method
+
+      method |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+       modal |         50       38.17       38.17
+  predpute_5 |         43       32.82       70.99
+ predpute_50 |         38       29.01      100.00
+-------------+-----------------------------------
+       Total |        131      100.00
+
+. * sjlog close, replace
+. 
+end of do-file
+
+. do "C:\Users\JENKINSS\AppData\Local\Temp\STD2ae4_000003.tmp"
+
+. 
+. cap drop touse3
+
+. replace seed = rep if seed == .
+(0 real changes made)
+
+. bysort rep seed (method) : gen byte touse3 = (_N==3)
+
+. assert inlist(touse3, 0, 1)
+
+. 
+. * class probablities are biased
+. * sjlog using simul_class1pr, replace
+. mean class1pr if touse3, over(n_method)
+
+Mean estimation                                   Number of obs = 112
+
+---------------------------------------------------------------------
+                    |       Mean   Std. err.     [95% conf. interval]
+--------------------+------------------------------------------------
+c.class1pr@n_method |
+             modal  |   .3891944   .0328879       .324025    .4543639
+        predpute_5  |   .3547211     .02896       .297335    .4121071
+       predpute_50  |   .3546063   .0288929      .2973531    .4118595
+---------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * std errors are too small
+. * sjlog using simul_class1pr_se, replace
+. bysort method (rep): sum class1pr if touse3
+
+-------------------------------------------------------------------------------
+-> method = modal
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    class1pr |         36    .3891944    .1973271       .067       .804
+
+-------------------------------------------------------------------------------
+-> method = predpute_5
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    class1pr |         38    .3547211    .1785212      .0548      .7066
+
+-------------------------------------------------------------------------------
+-> method = predpute_50
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    class1pr |         38    .3546063    .1781077      .0549     .70186
+
+
+. mean class1se if touse3, over(n_method)
+
+Mean estimation                                   Number of obs = 112
+
+---------------------------------------------------------------------
+                    |       Mean   Std. err.     [95% conf. interval]
+--------------------+------------------------------------------------
+c.class1se@n_method |
+             modal  |   .0140028   .0003375      .0133339    .0146717
+        predpute_5  |   .0188541   .0005709      .0177229    .0199854
+       predpute_50  |   .0179926   .0004903       .017021    .0189642
+---------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * variable in the model: target 0.3
+. * sjlog using simul_y1cl2pr, replace
+. mean y1cl2pr if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99, over(n_method)
+
+Mean estimation                                  Number of obs = 105
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y1cl2pr@n_method |
+            modal  |   .2001449   .0169292      .1665737     .233716
+       predpute_5  |   .2987509   .0112622      .2764174    .3210843
+      predpute_50  |   .2983183   .0113597      .2757916     .320845
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using simul_y1cl2pr_se, replace
+. bysort method (rep): sum y1cl2pr if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99
+
+-------------------------------------------------------------------------------
+-> method = modal
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y1cl2pr |         33    .2001449    .0972507   .0234987   .4030769
+
+-------------------------------------------------------------------------------
+-> method = predpute_5
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y1cl2pr |         36    .2987509    .0675734   .1316288   .4261345
+
+-------------------------------------------------------------------------------
+-> method = predpute_50
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y1cl2pr |         36    .2983183    .0681582   .1231294   .4279829
+
+
+. mean y1cl2se if touse3 & y1cl2pr>0.01 & y1cl2pr<0.99, over(n_method)
+
+Mean estimation                                  Number of obs = 105
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y1cl2se@n_method |
+            modal  |   .0187807   .0008491       .017097    .0204644
+       predpute_5  |   .0297811   .0012296      .0273428    .0322195
+      predpute_50  |    .028312   .0008299      .0266663    .0299577
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * variable in the model: target 0.5
+. * sjlog using simul_y4cl1pr, replace
+. mean y4cl1pr if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99, over(n_method)
+
+Mean estimation                                  Number of obs = 108
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y4cl1pr@n_method |
+            modal  |   .4930924   .0199575       .453529    .5326557
+       predpute_5  |   .4808426   .0143214      .4524522     .509233
+      predpute_50  |    .481436    .014106      .4534724    .5093995
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using simul_y4cl1pr_se, replace
+. bysort method (rep): sum y4cl1pr if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99
+
+-------------------------------------------------------------------------------
+-> method = modal
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y4cl1pr |         32    .4930924    .1128965   .2590909   .8224638
+
+-------------------------------------------------------------------------------
+-> method = predpute_5
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y4cl1pr |         38    .4808426    .0882828   .2314091   .6363392
+
+-------------------------------------------------------------------------------
+-> method = predpute_50
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y4cl1pr |         38     .481436    .0869554    .228918   .6518583
+
+
+. mean y4cl1se if touse3 & y4cl1pr>0.01 & y4cl1pr<0.99, over(n_method)
+
+Mean estimation                                  Number of obs = 108
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y4cl1se@n_method |
+            modal  |   .0251904   .0009233      .0233601    .0270206
+       predpute_5  |   .0381943   .0026969       .032848    .0435406
+      predpute_50  |   .0368932   .0025379       .031862    .0419243
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * variable not in the model: target 1
+. * sjlog  using simul_y6cl1pr, replace
+. mean y6cl1pr if touse3, over(n_method)
+
+Mean estimation                                  Number of obs = 112
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y6cl1pr@n_method |
+            modal  |    1.18559   .0121044      1.161604    1.209575
+       predpute_5  |    1.22507   .0101231       1.20501    1.245129
+      predpute_50  |   1.217453   .0093614      1.198903    1.236003
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using simul_y6cl1pr_se, replace
+. bysort method (rep): sum y6cl1pr if touse3
+
+-------------------------------------------------------------------------------
+-> method = modal
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl1pr |         36     1.18559    .0726266   1.035874   1.335067
+
+-------------------------------------------------------------------------------
+-> method = predpute_5
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl1pr |         38     1.22507    .0624029   1.035231    1.34935
+
+-------------------------------------------------------------------------------
+-> method = predpute_50
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl1pr |         38    1.217453    .0577074    1.06728   1.323826
+
+
+. mean y6cl1se if touse3, over(n_method)
+
+Mean estimation                                  Number of obs = 112
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y6cl1se@n_method |
+            modal  |   .0593503   .0034076      .0525978    .0661028
+       predpute_5  |   .0786962   .0057753      .0672521    .0901404
+      predpute_50  |   .0776486   .0056026      .0665466    .0887505
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * variable not in the model: target sqrt(3) == 1.73
+. * sjlog using simul_y6cl3pr, replace
+. mean y6cl3pr if touse3, over(n_method)
+
+Mean estimation                                  Number of obs = 111
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y6cl3pr@n_method |
+            modal  |     1.4633   .0282546      1.407306    1.519294
+       predpute_5  |   1.397531    .019723      1.358444    1.436617
+      predpute_50  |   1.401446   .0175541      1.366658    1.436234
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. * sjlog using simul_y6cl3pr_se, replace
+. bysort method (rep): sum y6cl3pr if touse3
+
+-------------------------------------------------------------------------------
+-> method = modal
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl3pr |         35      1.4633    .1671567   1.257244   1.810217
+
+-------------------------------------------------------------------------------
+-> method = predpute_5
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl3pr |         38    1.397531    .1215807   1.217524   1.724234
+
+-------------------------------------------------------------------------------
+-> method = predpute_50
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     y6cl3pr |         38    1.401446    .1082105    1.26233   1.695043
+
+
+. mean y6cl3se if touse3, over(n_method)
+
+Mean estimation                                  Number of obs = 111
+
+--------------------------------------------------------------------
+                   |       Mean   Std. err.     [95% conf. interval]
+-------------------+------------------------------------------------
+c.y6cl3se@n_method |
+            modal  |   .0997236   .0101584       .079592    .1198552
+       predpute_5  |   .1189936   .0104268      .0983301    .1396572
+      predpute_50  |   .1141739   .0096941      .0949624    .1333855
+--------------------------------------------------------------------
+
+. * sjlog close, replace
+. 
+. ***********
+. log close
+      name:  <unnamed>
+       log:  D:\home\stephenj\MYDocs\REF\_Stata_Journal_editor\kolenikov_infere
+> nce-imputed-latent-classes\2025.03.04.kolenikov_submission\postlca-simul-anal
+> yze_spj.log
+  log type:  text
+ closed on:   8 Jun 2025, 12:12:14
+-------------------------------------------------------------------------------
