@@ -1,8 +1,8 @@
 \inserttype[st0001]{article}
 \author{Kolenikov}{%
-  Stas Kolenikov\\NORC\\Columbia, Missouri, USA\\kolenikov-stas@norc.org
+  Stas Kolenikov\\NORC at the University of Chicago\\Columbia, Missouri, USA\\kolenikov-stas@norc.org
 }
-\title[Post-estimation for LCA via MI]{Inference for imputed latent classes using multiple imputation}
+\title[Post-estimation for LCA via MI]{Inference for predicted latent classes using multiple imputation}
 \maketitle
 
 \begin{abstract}
@@ -15,7 +15,7 @@ of the manifest variable distributions (proportions in outcome categories).
 Users of LCA are often interested in additional analysis, such as exploration
 of classes with additional variables, or use of class membership
 as a predictor variable in statistical models.
-I introduce a new command \stcmd{postlca_class_predpute} to help with these tasks.
+I introduce a new command \stcmd{postlca\_class\_predpute} to help with these tasks.
 It uses the mechanics of multiple imputation (MI) to multiply impute
 classes, sets up the necessary data structures and metadata for \stcmd{mi},
 and allows users to run \stcmd{mi estimate} to produce descriptive statistics 
@@ -52,7 +52,7 @@ they typically fail to properly incorporate uncertainty in parameter
 estimates and especially in class membership.
 
 The command contributed by this package, 
-\stcmd{postlca_class_predpute}, addresses the issue of permitting 
+\stcmd{postlca\_class\_predpute}, addresses the issue of permitting 
 arbitrary analyses with latent classes based on the modeled classes.
 (Well, almost ``arbitrary'': these analyses have to conform to Stata's
 estimation standards and result in the estimation output 
@@ -262,7 +262,7 @@ as follows.
     \item The measurement model only is fit (as in, e.g. \stcmd{gsem (y1 y2 y3 y4 <-), logit lclass(2)}).
     \item The classes are assigned based on the modal class probability.
     \item The multinomial regression model is fit to the classes as outcomes, with external predictors
-          of class membership (as in, e.g. \stcmd{mlogit C_hat x1 x2 x3})
+          of class membership (as in, e.g. \stcmd{mlogit Chat x1 x2 x3})
 \end{enumerate}
 
 These approaches were aimed at working around the limitations of the existing software
@@ -277,11 +277,11 @@ capabilities, the whole process can be internalized with the joint estimation sy
 so there is no need for corrective steps to obtain consistent model
 estimates and appropriate standard errors.
 
-\section{The \stcmd{postlca_class_predpute} command}
+\section{The \stcmd{postlca\_class\_predpute} command}
 \label{sec:new_command}
 
 Following \stcmd{gsem, lclass()} estimation, users can obtain
-multiply imputed latent classes using \stcmd{postlca_class_predpute} command
+multiply imputed latent classes using \stcmd{postlca\_class\_predpute} command
 with the following syntax.
 
 \begin{stsyntax}
@@ -661,7 +661,7 @@ classes with their population counterparts.
 \section{Conclusions}
 
 This article proposed a new post-estimation command 
-\stcmd{postlca_class_predpute} to facilitate analyses that
+\stcmd{postlca\_class\_predpute} to facilitate analyses that
 want to utilize classes predicted after the \stcmd{gsem, lclass()}
 latent class modeling. The article provided methodological
 justification for the command, the syntax, and presented 
