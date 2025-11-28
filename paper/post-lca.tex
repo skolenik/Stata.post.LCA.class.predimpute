@@ -6,69 +6,146 @@
 \maketitle
 
 \begin{abstract}
-I introduce a command to multiply impute latent classes
-following \stcmd{gsem, lclass()} latent class analysis. 
-This allows properly propagating uncertainty in class 
-membership to downstream analysis that may characterize
-the demographic composition of the classes, or use 
-the class as a predictor variable in statitsical models.
+Latent class analysis (LCA) is a commonly used tool to perform confirmatory
+analysis of multivariate relations between (typically) categorical variables 
+based on modeling different low dimension tables in different latent classes.
+The official Stata command for the task is \stcmd{gsem, lclass()}. 
+It produces estimates of the class probabilities and the structure
+of the manifest variable distributions (proportions in outcome categories).
+Users of LCA are often interested in additional analysis, such as exploration
+of classes with additional variables, or use of class membership
+as a predictor variable in statistical models.
+I introduce a new command \stcmd{postlca_class_predpute} to help with these tasks.
+It uses the mechanics of multiple imputation (MI) to multiply impute
+classes, sets up the necessary data structures and metadata for \stcmd{mi},
+and allows users to run \stcmd{mi estimate} to produce descriptive statistics 
+by latent class or fit the researcher's models of interest 
+with appropriate corrections to the standard errors.
+The long name of the command underlines that (1) it is a postestimation
+command for LCA, (2) it deals with classes, and (3) it performs a combination
+of class prediction and imputation.
 
 \keywords{\inserttag, postlca\_class\_predpute, latent class analysis, multiple imputation}
 \end{abstract}
 
-\section{Latent class analysis}
+\section{Introduction}
 
 Latent class analysis (LCA) is a commonly used statistical and quantitative
 social science technique of modeling counts in high dimensional contingency tables,
 or tables of associations of categorical variables
-\citet{hagenaars:mccutcheon:2002,mccutcheon:1987}. 
-LCA is a form of loglinear modeling, so let us explain that first.
-If the researcher has several categorical variables $X_1, X_2, \ldots, X_p$
+\citep{hagenaars:mccutcheon:2002,heinen:1996,mccutcheon:1987,weller:bowen:faubert:2020}. 
+It reduces the potentially complex multivariate relations
+to a mixture of simple (e.g. unidimensional) relations.
+
+Built-in Stata commands allow users to fit main effect latent class models
+using \stcmd{gsem, lclass()} syntax. Users can produce a limited range 
+of post-estimation analyses, including
+estimates of class probabilities (which are modeled on the logit scale internally,
+and thus require an \stcmd{nlcom} transformation) and class means/proportions of the outcome
+variables (also modeled on the logit scale internally). 
+Researchers are often interested in describing the latent classes
+using additional variables external to the model,
+or using classes in analysis as predictors or as moderators.
+As these tasks 
+break away from the estimation step in \stcmd{gsem, lclass()}, 
+they typically fail to properly incorporate uncertainty in parameter
+estimates and especially in class membership.
+
+The command contributed by this package, 
+\stcmd{postlca_class_predpute}, addresses the issue of permitting 
+arbitrary analyses with latent classes based on the modeled classes.
+(Well, almost ``arbitrary'': these analyses have to conform to Stata's
+estimation standards and result in the estimation output 
+including \stcmd{e(b)} vectors of estimates
+and \stcmd{e(V)} variance-covariance matrix, so a handful of common
+descriptive analyses such as computing correlations or producing 
+cross-tabulations are still not feasible.)
+
+The basic methodological foundations of LCA are introduced in Section \ref{sec:lca}.
+It also provides the examples from the Stata manual, and explains how
+the proposed new command fits into the ecosystem of latent modeling in Stata.
+Section \ref{sec:new_command} provides the syntax, followed by examples
+in Section \ref{sec:examples}. A simulation study is provided in Section \ref{sec:simul}.
+
+\section{Latent class analysis}
+\label{sec:lca}
+
+Latent class analysis is a form of latent variable modeling where
+both latent variables are discrete and the observed variables are discrete,
+as well. Latent models with continuous outcomes and continuous latent variables
+are often referred to as structural equation models (SEM) although that class
+of models also contains systems of observed variables. Latent models
+with continuous latent variables and discrete outcome variables
+are often referred to as latent trait models. Item-response theory
+models are examples of latent trait models.
+Finally, latent models with continuous outcomes and discrete latent variables
+are referred to as profile analysis.
+
+\subsection{Log-linear models}
+
+LCA with discrete data can be expressed as a form of loglinear modeling, 
+a statistical method to model counts within cells defined by categorical variables.
+Suppose the researcher has several categorical variables $X_1, X_2, \ldots, X_p$
 with categories 1 through $m_j, j=1, \ldots, p$,
-at their disposal, and can produce counts $n_{{k_1}{k_2}\ldots{k_p}}$ 
-in a complete $p$-dimensional table, the first step could be modeling
-in main effects:
+and counts $n_{{k_1}{k_2}\ldots{k_p}}$ 
+in a complete $p$-dimensional table. 
+Then the simplest main effects model for the counts is
 
 \begin{equation}
   \label{eq:loglinear:main}
-  \log \Expect n_{{k_1}{k_2}\ldots{k_p}} = 
-  \mathrm{offset} + 
-  \sum_{j=1}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
+  n_{{k_1}{k_2}\ldots{k_p}} \sim \mathop{\rm Poisson} 
+  \bigl(
+    \mathrm{offset} + 
+    \sum_{j=1}^p \sum_{k_j=1}^{m_j} \beta_{jk_j} 
+  \bigr)
 \end{equation}
 
 \noindent
 with applicable identification constraints (such as the sum of the coefficients
-of a single variable is zero, or the coefficient for the first category 
-of a variable is zero). Parameter estimates can be obtained by maximum
-likelihood, as equation (\ref{eq:loglinear:main}) is a Poisson regression model.
+for each specific variable being set to zero, $\sum_{k_j} \beta_{jk_j} = 0$,
+or the coefficient for the first category
+of a variable being set to zero, $\beta_j1=0$). 
+Those constraints are familiar to researchers who work with 
+multinomial regression models where coefficients of a reference category
+all need to be set to zero for identification.
+Parameter estimates in (\ref{eq:loglinear:main}) can be obtained by maximum
+likelihood.
 This model can be denoted as $X_1 + X_2 + \ldots + X_p$ main effects model.
+
 The fit of the model is assessed by the Pearson $\chi^2$ test comparing the
-expected vs. observed cell counts, or the likelihood ratio test against a saturated
+expected/predicted counts $\hat n_{{k_1}{k_2}\ldots{k_p}}$
+vs. observed cell counts, or by the likelihood ratio test against a saturated
 model where each cell in the full $p$-dimensional table
-has its own coefficient. If the main effects model were to be found inadequate,
-the researcher can entertain adding interactions, e.g. the interaction of 
-$X_1$ and $X_2$ would have $m_1 \times m_2$ terms for each pair of values 
-of these variables, rather than $m_1 + m_2$ main effects, as well as 
-remaining $p-2$ variables in their main effects form:
-
-\begin{equation}
-  \label{eq:loglinear:x1x2}
-  \log \Expect n_{{k_1}{k_2}\ldots{k_p}} = 
-  \mathrm{offset} + 
-  \sum_{k_1=1}^{m_1} \sum_{k_2=1}^{m_2} \beta_{12,k_1k_2} +
-  \sum_{j=3}^p \sum_{k=1}^{m_j} \beta_{jk_j} 
-\end{equation}
-
-This model, in the notation that is closer to Stata interaction terms
-than the traditional exposition of LCA, 
-can be denoted as $X_1 \# X_2 + X_3 + \ldots + X_p$.
+has its own coefficient. The Pearson test is typically found to be more
+reliable, as the likelihood ratio test often runs into problem
+of zero cells in high-dimensional settigs, where the corresponding
+cell parameter is understood as undefined or $-\infty$, neither
+of which is practicale.
 
 In the loglinear model notation, the latent class models 
-are models of the form $C \# (X_1 + X_2 + \ldots + X_p)$.
-Categorical latent variable $C$ is the latent class.
+with main effects estimable by \stcmd{gsem, lcass()}
+are models of the form $C \# (X_1 + X_2 + \ldots + X_p)$:
+categorical latent variable $C$ is the latent class,
+and all the outcome variables enter the model as main effects
+conditional on the class,
+or as two-way interactions with the latent class if the model
+is expressed marginally:
+
+\begin{equation}
+  \label{eq:loglinear:lca}
+  n_{{k_1}{k_2}\ldots{k_p}} | C \sim \mathop{\rm Poisson} 
+  \bigl(
+    \mathrm{offset}_C + 
+    \sum_{j=1}^p \sum_{k_j=1}^{m_j} \beta_{Cjk_j} 
+  \bigr),
+  \quad
+  \mathop{\rm Prob[C=c]} = \pi_c, \quad \sum_c \pi_c = 1
+\end{equation}
+
 The model is now a mixture of Poisson regressions,
 and maximum likelihood estimation additionally involves 
-estimating the prevalence of each class of $C$.
+estimating the prevalence $\pi_c$ of each class 
+and integrating the likelihood over the classes.
 
 Further extensions of latent class analysis may include:
 
@@ -92,7 +169,8 @@ Official Stata \stcmd{gsem, lclass()} implements
 the \textit{main effects} LCA. The syntax is that of the SEM
 families, with the variables that the arrow points to
 interpreted as the outcome variables, and the latent class
-variable considered the source of the arrow:
+variable not present in the arrow syntax
+being considered the source of the arrow:
 
 \begin{stlog}
 . webuse gsem_lca1
@@ -107,10 +185,9 @@ the complex survey data analysis.)
 As LCA is implemented through \stcmd{gsem},
 all the link functions and generalized linear model families
 are supported, extending the ``mainstream'' LCA to include
-multinomial and ordinal variables. (When all outcomes are continuous,
-the model is referred to as \textit{profile analysis}.)
+multinomial and ordinal variables. 
 
-\subsection{Examples }
+\subsection{Examples}
 
 LCA has found use in analyses of complicated economic concepts
 from survey data, and in assessment of measurement errors
@@ -119,8 +196,8 @@ that arise in the process.
 \citet{biemer:2004} provided analysis of labor force classification
 status (employed, unemployed, and out of labor force) following changes
 in the survey instrument used in the Current Population Survey (CPS).
-The latent classes are the true 
-LFS categories, and the observed variables are the corresponding 
+The latent classes are the true labor force participation
+categories, and the observed variables are the corresponding 
 survey measurements, demographics, and survey interview mode.
 The model is a variation of LCA that accounts for the survey methodology
 aspects of CPS: 
@@ -156,27 +233,56 @@ is unclear, and other variables tend to place them into non-employee status.
 
 \subsection{Scope for this package}
 
-Researchers are often interested in describing the latent classes
-or using these classes in analysis as predictors or as moderators.
 The official \semref{gsem postestimation} commands provide
-limited possibilities, namely reporting of the means
+limited possibilities for LCA, namely reporting of the means
 of the dependent variables by class via \stcmd{estat lcmean}.
 For nearly all meaningful applications of LCA, this is insufficient.
 
 The program distributed with the current package,
 \stcmd{postlca\_class\_predpute}, provides a pathway for the appropriate
 statistical inference that would account for uncertainty in class prediction.
-This is achieved through the mechanics of multiple imputation
+This is achieved through the mechanics of multiple imputation (MI)
 \citep{vanbuuren:2018:fimd2}. 
-The name is supposed to convey that
+The approach was mentioned in passing by \citet{bolck:croon:hagenaars:2004}
+who seem to have implemented it by hand.
+The name of the command conveys that
 \begin{enumerate}
   \item it is run after LCA as a post-estimation command;
   \item it predicts / imputes the latent classes.
 \end{enumerate}
 
-\section{The new command}
+\subsection{Related work}
 
-Imputation of latent classes, a \stcmd{gsem} postestimation command:
+The \stcmd{step3} command \citep{repec:boc:bocode:s459182} implements
+\citet{bolck:croon:hagenaars:2004} and \citet{vermunt:2010} analytic corrections
+for prediction of the latent classes when the analysis proceeds
+as follows.
+
+\begin{enumerate}
+    \item The measurement model only is fit (as in, e.g. \stcmd{gsem (y1 y2 y3 y4 <-), logit lclass(2)}).
+    \item The classes are assigned based on the modal class probability.
+    \item The multinomial regression model is fit to the classes as outcomes, with external predictors
+          of class membership (as in, e.g. \stcmd{mlogit C_hat x1 x2 x3})
+\end{enumerate}
+
+These approaches were aimed at working around the limitations of the existing software
+that was limited to fitting measurement models only at the time. With Stata LCA
+capabilities, the whole process can be internalized with the joint estimation syntax
+
+\begin{stlog}
+. gsem (y1 y2 y3 y4 <- ) (C <- x1 x2 x3), logit lclass(C 2)
+\end{stlog}
+
+\noindent 
+so there is no need for corrective steps to obtain consistent model
+estimates and appropriate standard errors.
+
+\section{The \stcmd{postlca_class_predpute} command}
+\label{sec:new_command}
+
+Following \stcmd{gsem, lclass()} estimation, users can obtain
+multiply imputed latent classes using \stcmd{postlca_class_predpute} command
+with the following syntax.
 
 \begin{stsyntax}
     postlca\_class\_predpute,
@@ -201,6 +307,7 @@ Imputation of latent classes, a \stcmd{gsem} postestimation command:
 }
 
 \section{Examples}
+\label{sec:examples}
 
 \subsection{Stata manual data set example}
 
@@ -272,13 +379,16 @@ is arguably an extension that is not quite well covered in the
 This analysis approximates breaking down the population
 into "generally healthy" and "unhealthy" groups, as e.g.
 the gradient of \textit{hlthstat} variable between the classes
-shows. The official \stcmd{gsem postestimation} commands
-take approximately forever to run.
+shows. 
 Some complicated interaction of \stcmd{svy} and \stcmd{gsem} 
-made the default starting infeasible, 
+made the default starting values infeasible, 
 hence I had to specify the initial random search.
+The official \stcmd{gsem postestimation} commands
+takes about 10 seconds for \stcmd{estat lcprob} 
+and about 80 seconds for \stcmd{estat lcmean}.
+
 The use of the \stcmd{postlca\_class\_predpute} command
-makes it possible to run the analylsis much faster
+makes it possible to run the post-estimation analylses much faster
 (although that has never been the intent of the package),
 and to conduct complementary analyses,
 e.g. analysis of the racial composition of the two classes
@@ -288,7 +398,13 @@ using a variable that it outside of the model.
 \input{example_nhanes2_predpute.log}\nullskip
 \end{stlog}
 
-The less healthy class has a higher concentration
+Imputation of 10 classes took less than a second.
+The analogs of both \stcmd{estat lcprob} and
+\stcmd{estat lcmean} took about 3 seconds to run.
+(This time should be expected to be roughly linear
+with the number of imputations $M$.)
+As the new analysis of classes by race shows,
+the less healthy class has a higher concentration
 of ethnic minorities.
 
 \subsection{Choosing the number of imputations}
@@ -336,7 +452,8 @@ they
         for complex survey data by a factor of 3--5.
 \end{enumerate}
 
-Then a chosen value of $M$ can be used for all analyses in the paper.
+Then a chosen value of $M$ can be used for all analyses in 
+the manuscript under preparation.
 
 An additional consideration for the choice of the number of imputations
 is ensuring diversity of the simulated classes.
@@ -349,7 +466,13 @@ variance increase statistics:
 \input{example_nhanes2_dftable62gh.log}\nullskip
 \end{stlog}
 
+Zero cases of poor health in the ``healthier'' class 
+could be considered a structural zero. If information
+on structural zeroes is available from substantive considerations,
+it may be incorporated through constraints at estimation stage.
+
 \section{Simulation}
+\label{sec:simul}
 
 So how much of a problem is the modal imputation of the latent classes?
 I ran a small simulation to investigate. Samples were taken from
@@ -534,6 +657,18 @@ Overall, it seems like the problem of the class indeterminacy
 (permutation of classes) has still been damaging the simulation.
 Further steps would need to be taken to better match the estimated
 classes with their population counterparts.
+
+\section{Conclusions}
+
+This article proposed a new post-estimation command 
+\stcmd{postlca_class_predpute} to facilitate analyses that
+want to utilize classes predicted after the \stcmd{gsem, lclass()}
+latent class modeling. The article provided methodological
+justification for the command, the syntax, and presented 
+a simulation study that underscored some of the issues
+that practitioners of LCA should have in mind when
+applying both the official Stata modeling capabilities,
+and the new command.
 
 \newpage
 
