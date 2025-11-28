@@ -19,11 +19,56 @@
   pages     = {127--140}
 }
 
+@article{bolck:croon:hagenaars:2004,
+  author    = {Annabel Bolck, Marcel Croon and Jacques Hagenaars},
+  title     = {Estimating Latent Structure Models with Categorical Variables: One-Step Versus Three-Step Estimators},
+  jounral   = {Political Analysis},
+  volume    = {12},
+  issue     = {1},
+  pages     = {3--27},
+  doi       = {10.1093/pan/mph001}  
+}
+
+@Misc{repec:boc:bocode:s459182,
+  howpublished={Statistical Software Components, Boston College Department of Economics},
+  author={Giovanbattista Califano},
+  title={STEP3: Stata module to relate latent class membership to external variables},
+  year={2023},
+  abstract={
+    step3 performs two bias-adjusted three-step methods to relate latent
+    class membership to external variables: Maximum Likelihood
+    (ML; Vermunt, 2010) and Bolck-Croon-Hagenaars (BCH; Bolck et al.,
+    2004). The external variables can be either covariates
+    (predictors of class membership) or distal outcomes (predicted by
+    class membership). The command adjusts for misclassification errors
+    that arise in three-step approaches when observations are assigned
+    to classes based on posterior probabilities from an initial latent
+    class model. The first step (estimating the latent class model and
+    predicting posterior probabilities) must be done separately
+    (e.g., with gsem or fmm). step3 uses these predicted probabilities
+    to construct a classification error matrix and fits the structural
+    model via ML or BCH correction.
+  },
+  keywords={latent class analysis; stepwise procedure; Stata},
+  url={https://ideas.repec.org/c/boc/bocode/s459182.html},
+}
+
+
+
 @book{hagenaars:mccutcheon:2002,
   title={Applied latent class analysis},
   author={Hagenaars, Jacques A and {McCutcheon}, Allan L},
   year={2002},
   publisher={Cambridge University Press}
+}
+
+@book{heinen:1996,
+  title={Latent class and discrete latent trait models: Similarities and Differences},
+  author={Ton Heinen},
+  year={1996},
+  series={ADdvanced Quantitative Techniques in the Social Sciences},
+  publisher={SAGE Publications}
+  address={Thousand Oaks, California, USA}
 }
 
 @inproceedings{kolenikov:daley:2017,
@@ -81,4 +126,38 @@
 	year = 2018,
 	edition = "2nd",
 	publisher = "Chapman \& Hall/CRC"
+}
+
+@article{vermunt:2010,
+  journal  = "Political Analysis",
+  year     = 2010,
+  volume   = 18,
+  pages    = {450–-469},
+  doi      = {10.1093/pan/mpq025},
+  title    = "Latent Class Modeling with Covariates: Two Improved Three-Step Approaches",
+  author   = "Jeroen K. Vermunt"
+}
+
+@article{weller:bowen:faubert:2020,
+  author = {Bridget E. Weller and Natasha K. Bowen and Sarah J. Faubert},
+  title ={Latent Class Analysis: A Guide to Best Practice},
+  journal = {Journal of Black Psychology},
+  volume = {46},
+  number = {4},
+  pages = {287--311},
+  year = {2020},
+  doi = {10.1177/0095798420930932},
+  abstract = { 
+    Latent class analysis (LCA) is a statistical procedure used to
+    identify qualitatively different subgroups within populations who
+    often share certain outward characteristics. The assumption
+    underlying LCA is that membership in unobserved groups (or classes)
+    can be explained by patterns of scores across survey questions,
+    assessment indicators, or scales. The application of LCA is an
+    active area of research and continues to evolve. As more
+    researchers begin to apply the approach, detailed information on
+    key considerations in conducting LCA is needed. In the present
+    article, we describe LCA, review key elements to consider when
+    conducting LCA, and provide an example of its application. 
+  }
 }

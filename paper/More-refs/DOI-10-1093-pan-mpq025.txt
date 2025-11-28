@@ -1,0 +1,1 @@
+@article{Vermunt_2017, title={Latent Class Modeling with Covariates: Two Improved Three-Step Approaches}, volume={18}, DOI={10.1093/pan/mpq025}, number={4}, journal={Political Analysis}, author={Vermunt, Jeroen K.}, year={2017}, pages={450–469}} <div></div>

@@ -1,0 +1,1 @@
+@article{Bolck_Croon_Hagenaars_2004, title={Estimating Latent Structure Models with Categorical Variables: One-Step Versus Three-Step Estimators}, volume={12}, DOI={10.1093/pan/mph001}, number={1}, journal={Political Analysis}, author={Bolck, Annabel and Croon, Marcel and Hagenaars, Jacques}, year={2004}, pages={3–27}} <div></div>
