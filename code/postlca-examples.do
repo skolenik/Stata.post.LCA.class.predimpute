@@ -1,4 +1,6 @@
-cd ../paper
+* Stas' internal: cd ../paper
+
+version 19
 
 cap log close
 set rmsg off
